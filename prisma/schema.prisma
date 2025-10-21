@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin Users
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  role          String    @default("admin") // admin, editor
+  image         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Products
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  nameEn      String?
+  description String
+  price       String
+  image       String
+  features    String[] // Array of features
+  benefits    String[] // Array of benefits
+  category    String   @default("ກັວຊາ")
+  inStock     Boolean  @default(true)
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Blog Posts
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   @db.Text
+  image       String
+  category    String   @default("ທົ່ວໄປ")
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  views       Int      @default(0)
+  readTime    String   @default("5 ນາທີ")
+  seoTitle    String?
+  seoDescription String?
+  seoKeywords String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+}
+
+// FAQ
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  category  String   @default("ທົ່ວໄປ")
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Site Settings
+model SiteSettings {
+  id              String   @id @default(cuid())
+  siteName        String   @default("NAMNGAM")
+  siteNameLao     String   @default("ນຳງາມ")
+  siteDescription String   @default("ກັວຊາ ສຸຂະພາບແລະຄວາມງາມ")
+  logo            String?
+  favicon         String?
+  
+  // Contact Info
+  email           String   @default("Namngambrand@gmail.com")
+  phone           String   @default("+856 20 55 485 622")
+  whatsapp        String   @default("+856 20 55 485 622")
+  facebook        String   @default("https://www.facebook.com/profile.php?id=61576657104465")
+  
+  // SEO
+  seoTitle        String?
+  seoDescription  String?
+  seoKeywords     String[]
+  
+  // Analytics
+  googleAnalyticsId String?
+  facebookPixelId   String?
+  
+  updatedAt       DateTime @updatedAt
+}
+
+// Newsletter Subscribers
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  status    String   @default("active") // active, unsubscribed
+  source    String   @default("website")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
