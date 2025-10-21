@@ -51,12 +51,12 @@ export default function Benefits() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: 'center 40%' }}
+          style={{ objectPosition: 'center 18%' }}
         >
           <source src="/video-background.mp4" type="video/mp4" />
         </video>
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-pink-50/75 to-white/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-pink-5/5 to-white/5" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">

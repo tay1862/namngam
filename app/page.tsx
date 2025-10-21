@@ -6,6 +6,7 @@ import BlogPreview from './components/BlogPreview';
 import FAQ from './components/FAQ';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
+import WhatsAppButton from './components/WhatsAppButton';
 
 export default function Home() {
   return (
@@ -32,6 +33,7 @@ export default function Home() {
         </div>
       </main>
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }

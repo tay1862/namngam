@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Mail, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Heart, Mail, Facebook, Phone } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Footer() {
@@ -31,25 +31,23 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               <motion.a
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61576657104465"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, y: -2 }}
                 className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
               >
                 <Facebook size={20} />
               </motion.a>
               <motion.a
-                href="#"
+                href="https://wa.me/8562055485622"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, y: -2 }}
-                className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+                className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white hover:bg-green-600 transition-colors"
+                title="WhatsApp: +856 20 55 485 622"
               >
-                <Instagram size={20} />
-              </motion.a>
-              <motion.a
-                href="#"
-                whileHover={{ scale: 1.1, y: -2 }}
-                className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
-              >
-                <Youtube size={20} />
+                <Phone size={20} />
               </motion.a>
             </div>
           </div>
@@ -84,11 +82,17 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 className="text-lg font-bold text-rococo-900 mb-4">ຕິດຕໍ່</h4>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li className="flex items-center gap-2 text-rococo-700">
                 <Mail size={16} />
-                <a href="mailto:info@guasha.la" className="hover:text-pink-600 transition-colors">
-                  info@guasha.la
+                <a href="mailto:Namngambrand@gmail.com" className="hover:text-pink-600 transition-colors">
+                  Namngambrand@gmail.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2 text-rococo-700">
+                <Phone size={16} />
+                <a href="https://wa.me/8562055485622" target="_blank" rel="noopener noreferrer" className="hover:text-pink-600 transition-colors">
+                  +856 20 55 485 622
                 </a>
               </li>
             </ul>

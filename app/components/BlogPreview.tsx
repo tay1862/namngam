@@ -53,7 +53,7 @@ export default function BlogPreview() {
           priority
         />
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-rococo-50/85 via-white/80 to-rococo-50/85" />
+        <div className="absolute inset-0 bg-gradient-to-b from-rococo-5/5 via-white/5 to-rococo-5/5" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">

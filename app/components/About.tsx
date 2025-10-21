@@ -40,7 +40,7 @@ export default function About() {
           priority
         />
         {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-rococo-50/70 via-white/60 to-white/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-rococo-5/5 via-white/5 to-white/5" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
