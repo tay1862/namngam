@@ -42,8 +42,21 @@ export default function BlogPreview() {
   ];
 
   return (
-    <section ref={ref} className="py-24 px-4 bg-gradient-to-b from-rococo-50 to-white">
-      <div className="max-w-6xl mx-auto">
+    <section ref={ref} className="relative py-24 px-4 overflow-hidden">
+      {/* Background Image - Full Cover */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/background-blog.jpeg"
+          alt="Blog Background"
+          fill
+          className="object-cover"
+          priority
+        />
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-rococo-50/85 via-white/80 to-rococo-50/85" />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
