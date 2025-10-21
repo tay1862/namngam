@@ -29,7 +29,7 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
     <>
       {/* Hero Section */}
       <section className="relative py-20 px-4 bg-gradient-to-b from-pink-50 to-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/Logo-namngam-gold.png')] bg-center bg-no-repeat opacity-5" style={{ backgroundSize: '400px' }} />
+        <div className="absolute inset-0 bg-[url('/Logo-namngam-white.png')] bg-center bg-no-repeat opacity-5" style={{ backgroundSize: '400px' }} />
         
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <motion.div

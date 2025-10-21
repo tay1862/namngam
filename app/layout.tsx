@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     siteName: "NAMNGAM",
     images: [
       {
-        url: "/Logo-namngam-gold.png",
+        url: "/Logo-namngam-white.png",
         width: 1200,
         height: 630,
         alt: "NAMNGAM Gua Sha",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NAMNGAM - ກັວຊາ ສຸຂະພາບແລະຄວາມງາມ",
     description: "NAMNGAM ຄູ່ມືການນວດກັວຊາ ເພື່ອສຸຂະພາບແລະຄວາມງາມທາງດ້ານຜິວໜ້າ",
-    images: ["/Logo-namngam-gold.png"],
+    images: ["/Logo-namngam-white.png"],
   },
   robots: {
     index: true,

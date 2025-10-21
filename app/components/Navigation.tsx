@@ -44,7 +44,7 @@ export default function Navigation() {
             whileHover={{ scale: 1.05 }}
           >
             <Image
-              src="/Logo-namngam-gold.png"
+              src="/Logo-namngam-white.png"
               alt="NAMNGAM Logo"
               width={50}
               height={50}

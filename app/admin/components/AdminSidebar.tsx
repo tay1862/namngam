@@ -36,7 +36,7 @@ export default function AdminSidebar() {
           <Link href="/admin/dashboard" className="flex items-center gap-3 group">
             <div className="w-12 h-12 relative">
               <Image
-                src="/Logo-namngam-gold.png"
+              src="/Logo-namngam-white.png"
                 alt="NAMNGAM"
                 fill
                 className="object-contain group-hover:scale-110 transition-transform"

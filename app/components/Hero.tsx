@@ -19,7 +19,7 @@ export default function Hero() {
           className="relative w-[600px] h-[600px]"
         >
           <Image
-            src="/Logo-namngam-gold.png"
+            src="/Logo-namngam-white.png"
             alt="NAMNGAM Background"
             fill
             className="object-contain"
@@ -36,7 +36,7 @@ export default function Hero() {
         className="absolute top-20 right-20 w-64 h-64 pointer-events-none"
       >
         <Image
-          src="/Logo-namngam-gold.png"
+          src="/Logo-namngam-white.png"
           alt="Decorative"
           fill
           className="object-contain rotate-12"
@@ -50,7 +50,7 @@ export default function Hero() {
         className="absolute bottom-20 left-20 w-64 h-64 pointer-events-none"
       >
         <Image
-          src="/Logo-namngam-gold.png"
+          src="/Logo-namngam-white.png"
           alt="Decorative"
           fill
           className="object-contain -rotate-12"
