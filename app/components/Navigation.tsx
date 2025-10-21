@@ -1,0 +1,117 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
+
+export default function Navigation() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: 'ໜ້າຫຼັກ', href: '#home' },
+    { name: 'ກ່ຽວກັບ', href: '#about' },
+    { name: 'ຜົນປະໂຫຍດ', href: '#benefits' },
+    { name: 'ບົດຄວາມ', href: '#blog' },
+    { name: 'ຕິດຕໍ່', href: '#contact' },
+  ];
+
+  return (
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/90 backdrop-blur-md shadow-lg' 
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <motion.a
+            href="#home"
+            className="flex items-center gap-3"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Image
+              src="/Logo-namngam-gold.png"
+              alt="NAMNGAM Logo"
+              width={50}
+              height={50}
+              className="object-contain"
+            />
+            <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
+              NAMNGAM
+            </span>
+          </motion.a>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navLinks.map((link) => (
+              <motion.a
+                key={link.name}
+                href={link.href}
+                className="text-rococo-700 hover:text-pink-600 font-medium transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {link.name}
+              </motion.a>
+            ))}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-shadow"
+            >
+              ເລີ່ມຕົ້ນ
+            </motion.button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-rococo-700"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="md:hidden bg-white border-t border-pink-100"
+        >
+          <div className="px-4 py-6 space-y-4">
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="block text-rococo-700 hover:text-pink-600 font-medium transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.name}
+              </a>
+            ))}
+            <button className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium">
+              ເລີ່ມຕົ້ນ
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </motion.nav>
+  );
+}
