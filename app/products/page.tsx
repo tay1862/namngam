@@ -2,19 +2,59 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Heart, Sparkles, Star, Check } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 
+interface Product {
+  id: string;
+  name: string;
+  nameEn?: string;
+  description: string;
+  price: string;
+  image: string;
+  features: string[];
+  benefits: string[];
+}
+
 export default function ProductsPage() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // สินค้ากัวชา (ตัวอย่าง - ปรับตามสินค้าจริง)
-  const products = [
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent" />
+        </div>
+      </>
+    );
+  }
+
+  // Fallback products if DB is empty
+  const displayProducts = products.length > 0 ? products : [
     {
       id: 1,
       name: "ກັວຊາໄມ້ກ່ຽງ ຄລາສສິກ",
@@ -106,7 +146,7 @@ export default function ProductsPage() {
         <section ref={ref} className="py-16 px-4 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-              {products.map((product, index) => (
+              {displayProducts.map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}

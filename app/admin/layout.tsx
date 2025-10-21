@@ -12,12 +12,12 @@ export default async function AdminLayout({
   const session = await getServerSession(authOptions);
 
   // Allow login page without session
-  if (!session && !children.toString().includes('login')) {
+  if (!session && children && !children.toString().includes('login')) {
     redirect('/admin/login');
   }
 
   // Login page doesn't need layout
-  if (children.toString().includes('login') || !session) {
+  if ((children && children.toString().includes('login')) || !session) {
     return <>{children}</>;
   }
 

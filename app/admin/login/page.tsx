@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
         router.push('/admin/dashboard');
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       setError('ເກີດຂໍ້ຜິດພາດ, ກະລຸນາລອງໃໝ່ອີກຄັ້ງ');
     } finally {
       setLoading(false);
@@ -159,12 +159,12 @@ export default function AdminLoginPage() {
 
         {/* Back to Site Link (Hidden) */}
         <div className="mt-4 text-center">
-          <a
-            href="/"
+          <button
+            onClick={() => window.location.href = '/'}
             className="text-gray-600 hover:text-gray-400 text-sm transition-colors"
           >
             ກັບໄປໜ້າຫຼັກ
-          </a>
+          </button>
         </div>
       </motion.div>
     </div>
