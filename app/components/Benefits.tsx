@@ -42,8 +42,23 @@ export default function Benefits() {
   ];
 
   return (
-    <section ref={ref} className="py-24 px-4 bg-gradient-to-b from-white to-pink-50">
-      <div className="max-w-6xl mx-auto">
+    <section ref={ref} className="relative py-24 px-4 overflow-hidden">
+      {/* Video Background - Full Cover */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/video-background.mp4" type="video/mp4" />
+        </video>
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-pink-50/75 to-white/80" />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
