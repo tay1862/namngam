@@ -9,12 +9,52 @@ export default function Newsletter() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter subscription
-    console.log('Subscribed:', email);
-    setEmail('');
+    
+    // Validation
+    if (!email) {
+      setStatus('error');
+      setMessage('ກະລຸນາໃສ່ອີເມວຂອງທ່ານ');
+      return;
+    }
+    
+    if (!validateEmail(email)) {
+      setStatus('error');
+      setMessage('ກະລຸນາໃສ່ອີເມວທີ່ຖືກຕ້ອງ');
+      return;
+    }
+
+    setStatus('loading');
+    setMessage('');
+
+    try {
+      // ส่งข้อมูลไปยัง API
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setMessage('ສະໝັກສຳເລັດ! ຂອບໃຈທີ່ສົນໃຈ');
+        setEmail('');
+      } else {
+        throw new Error('Failed to subscribe');
+      }
+    } catch {
+      setStatus('error');
+      setMessage('ເກີດຂໍ້ຜິດພາດ, ກະລຸນາລອງໃໝ່ອີກຄັ້ງ');
+    }
   };
 
   return (
@@ -55,23 +95,52 @@ export default function Newsletter() {
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setStatus('idle');
+                      setMessage('');
+                    }}
                     placeholder="ອີເມວຂອງທ່ານ"
-                    required
-                    className="w-full pl-12 pr-4 py-4 rounded-full border-2 border-pink-200 focus:border-pink-500 focus:outline-none transition-colors text-rococo-900 placeholder:text-rococo-400"
+                    disabled={status === 'loading'}
+                    className={`w-full pl-12 pr-4 py-4 rounded-full border-2 ${
+                      status === 'error' ? 'border-red-500' : 'border-pink-200'
+                    } focus:border-pink-500 focus:outline-none transition-colors text-rococo-900 placeholder:text-rococo-400 disabled:opacity-50`}
                   />
                 </div>
 
                 <motion.button
                   type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-shadow flex items-center justify-center gap-2"
+                  disabled={status === 'loading' || status === 'success'}
+                  whileHover={status === 'loading' ? {} : { scale: 1.05 }}
+                  whileTap={status === 'loading' ? {} : { scale: 0.95 }}
+                  className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-shadow flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span>ສະໝັກ</span>
-                  <Send className="w-5 h-5" />
+                  {status === 'loading' ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
+                      <span>ກຳລັງສົ່ງ...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>ສະໝັກ</span>
+                      <Send className="w-5 h-5" />
+                    </>
+                  )}
                 </motion.button>
               </div>
+
+              {/* Success/Error Messages */}
+              {message && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`text-sm text-center mt-4 font-medium ${
+                    status === 'success' ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {message}
+                </motion.p>
+              )}
 
               <p className="text-sm text-rococo-600 text-center mt-4">
                 ພວກເຮົາເຄົາລົບຄວາມເປັນສ່ວນຕົວຂອງທ່ານ ແລະ ຈະບໍ່ແບ່ງປັນຂໍ້ມູນໃຫ້ຄົນອື່ນ

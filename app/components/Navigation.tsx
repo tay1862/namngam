@@ -18,11 +18,11 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { name: 'ໜ້າຫຼັກ', href: '#home' },
-    { name: 'ກ່ຽວກັບ', href: '#about' },
-    { name: 'ຜົນປະໂຫຍດ', href: '#benefits' },
-    { name: 'ບົດຄວາມ', href: '#blog' },
-    { name: 'ຕິດຕໍ່', href: '#contact' },
+    { name: 'ໜ້າຫຼັກ', href: '/' },
+    { name: 'ກ່ຽວກັບ', href: '/#about' },
+    { name: 'ສິນຄ້າ', href: '/products' },
+    { name: 'ບົດຄວາມ', href: '/#blog' },
+    { name: 'ຕິດຕໍ່', href: '/#contact' },
   ];
 
   return (
