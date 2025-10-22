@@ -10,7 +10,9 @@ interface AboutSection {
   titleEn?: string;
   description: string;
   image?: string;
+  backgroundType?: string;
   backgroundImage?: string;
+  backgroundColor?: string;
   videoUrl?: string;
   published: boolean;
   order: number;
@@ -69,7 +71,9 @@ export default function AboutManagementPage() {
     titleEn: '',
     description: '',
     image: '',
+    backgroundType: 'image',
     backgroundImage: '',
+    backgroundColor: '#fdf2f8',
     videoUrl: '',
     published: true,
     order: 0,
@@ -122,7 +126,9 @@ export default function AboutManagementPage() {
       titleEn: '',
       description: '',
       image: '',
+      backgroundType: 'image',
       backgroundImage: '',
+      backgroundColor: '#fdf2f8',
       videoUrl: '',
       published: true,
       order: 0,
@@ -218,26 +224,59 @@ export default function AboutManagementPage() {
               </div>
             </div>
 
-            {/* Background Image Upload */}
+            {/* Background Settings */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                ຮູບພື້ນຫຼັງ
+                ປະເພດພື້ນຫຼັງ
               </label>
               <div className="space-y-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, 'backgroundImage')}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white"
-                  disabled={uploading}
-                />
-                {formData.backgroundImage && (
-                  <div className="relative w-full h-32">
-                    <Image
-                      src={formData.backgroundImage}
-                      alt="Background Preview"
-                      fill
-                      className="object-cover rounded-lg"
+                <select
+                  value={formData.backgroundType}
+                  onChange={(e) => setFormData({ ...formData, backgroundType: e.target.value })}
+                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
+                >
+                  <option value="image">ຮູບພາບ</option>
+                  <option value="gradient">ສີເກຣດຽນ</option>
+                  <option value="solid">ສີທຶບ</option>
+                </select>
+                
+                {formData.backgroundType === 'image' && (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'backgroundImage')}
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white"
+                      disabled={uploading}
+                    />
+                    {formData.backgroundImage && (
+                      <div className="relative w-full h-32">
+                        <Image
+                          src={formData.backgroundImage}
+                          alt="Background Preview"
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+                
+                {(formData.backgroundType === 'solid' || formData.backgroundType === 'gradient') && (
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">
+                      {formData.backgroundType === 'gradient' 
+                        ? 'Tailwind Gradient Class (e.g., from-pink-50 via-white to-rococo-50)'
+                        : 'Hex Color (e.g., #fdf2f8)'}
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.backgroundColor || ''}
+                      onChange={(e) => setFormData({ ...formData, backgroundColor: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white text-sm"
+                      placeholder={formData.backgroundType === 'gradient' 
+                        ? 'from-pink-50 via-white to-rococo-50'
+                        : '#fdf2f8'}
                     />
                   </div>
                 )}

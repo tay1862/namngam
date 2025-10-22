@@ -14,7 +14,7 @@ export default function Hero() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 5, scale: 1 }}
           transition={{ duration: 1.5 }}
           className="relative w-[600px] h-[600px]"
         >
@@ -120,15 +120,17 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+          className="flex justify-center"
         >
-          <button className="group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl">
+          <button 
+            onClick={() => {
+              const aboutSection = document.querySelector('#about-section');
+              aboutSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            className="group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
+          >
             <span className="relative z-10">ເລີ່ມຕົ້ນຮຽນຮູ້</span>
             <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </button>
-          
-          <button className="px-8 py-4 bg-white/50 backdrop-blur-sm text-rococo-800 rounded-full font-medium text-lg border-2 border-rococo-300 hover:border-pink-400 transition-all hover:scale-105 hover:shadow-lg">
-            ເບິ່ງວິດີໂອ
           </button>
         </motion.div>
 

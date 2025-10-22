@@ -12,7 +12,9 @@ interface AboutSection {
   titleEn?: string;
   description: string;
   image?: string;
+  backgroundType?: string;
   backgroundImage?: string;
+  backgroundColor?: string;
   videoUrl?: string;
 }
 
@@ -58,20 +60,32 @@ export default function About() {
     }
   ];
 
+  const backgroundType = section?.backgroundType || 'image';
   const backgroundImg = section?.backgroundImage || '/backgroud-about.jpeg';
+  const backgroundColor = section?.backgroundColor || 'from-pink-50 via-white to-rococo-50';
 
   return (
-    <section ref={ref} className="relative py-24 px-4 overflow-hidden">
-      {/* Background Image */}
+    <section id="about-section" ref={ref} className="relative py-24 px-4 overflow-hidden">
+      {/* Dynamic Background */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={backgroundImg}
-          alt="Background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/70 to-white/80" />
+        {backgroundType === 'image' && backgroundImg && (
+          <>
+            <Image
+              src={backgroundImg}
+              alt="Background"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/70 to-white/80" />
+          </>
+        )}
+        {backgroundType === 'gradient' && (
+          <div className={`absolute inset-0 bg-gradient-to-b ${backgroundColor}`} />
+        )}
+        {backgroundType === 'solid' && (
+          <div className="absolute inset-0" style={{ backgroundColor: backgroundColor }} />
+        )}
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">

@@ -11,13 +11,17 @@ import {
   Users, 
   Settings,
   LogOut,
-  Sparkles
+  Sparkles,
+  Info,
+  Star
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { motion } from 'framer-motion';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'ໜ້າຫຼັກ', href: '/admin/dashboard' },
+  { icon: Info, label: 'ກ່ຽວກັບເຮົາ', href: '/admin/about' },
+  { icon: Star, label: 'ຜົນປະໂຫຍດ', href: '/admin/benefits' },
   { icon: Package, label: 'ຈັດການສິນຄ້າ', href: '/admin/products' },
   { icon: FileText, label: 'ຈັດການບົດຄວາມ', href: '/admin/blog' },
   { icon: HelpCircle, label: 'ຄຳຖາມທີ່ພົບເລື້ອຍ', href: '/admin/faq' },

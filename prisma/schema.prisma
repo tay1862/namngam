@@ -156,7 +156,9 @@ model AboutSection {
   titleEn         String?
   description     String   @db.Text
   image           String?
+  backgroundType  String   @default("image") // image, gradient, solid
   backgroundImage String?
+  backgroundColor String?  @default("#fdf2f8") // For solid/gradient
   videoUrl        String?
   published       Boolean  @default(true)
   order           Int      @default(0)
@@ -176,6 +178,17 @@ model BenefitItem {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// Section Backgrounds (for Benefits, FAQ, etc.)
+model SectionBackground {
+  id              String   @id @default(cuid())
+  sectionName     String   @unique // benefits, faq, products, blog
+  backgroundType  String   @default("gradient") // image, gradient, solid
+  backgroundImage String?
+  backgroundColor String?  @default("from-pink-50 via-white to-rococo-50") // Tailwind class or hex
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 // Hero Section
