@@ -2,36 +2,67 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Plus, Minus } from 'lucide-react';
+
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+}
 
 export default function FAQ() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const faqs = [
+  useEffect(() => {
+    fetchFAQs();
+  }, []);
+
+  const fetchFAQs = async () => {
+    try {
+      const res = await fetch('/api/faq');
+      const data = await res.json();
+      setFaqs(data);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const defaultFaqs = [
     {
+      id: '1',
       question: "ກັວຊາເຫມາະກັບທຸກຄົນບໍ?",
       answer: "ກັວຊາເຫມາະສົມກັບຄົນສ່ວນໃຫຍ່ ແຕ່ບໍ່ແນະນຳສຳລັບຜູ້ທີ່ມີບັນຫາກ່ຽວກັບເລືອດ, ຜິວໜັງອັກເສບຮ້າຍແຮງ, ຫຼືກຳລັງຖືພາ. ຄວນປຶກສາແພດກ່ອນໃຊ້."
     },
     {
+      id: '2',
       question: "ຄວນໃຊ້ກັວຊາເທົ່າໃດຕໍ່ອາທິດ?",
       answer: "ແນະນຳໃຊ້ 2-3 ຄັ້ງຕໍ່ອາທິດ ຄັ້ງລະ 5-10 ນາທີ. ຫ້າມໃຊ້ບໍ່ຄົວປະຕິດິນຕໍ່ກັນ ເພື່ອໃຫ້ຜິວໜ້າມີເວລາພັກຜ່ອນ."
     },
     {
+      id: '3',
       question: "ຕ້ອງໃຊ້ເຄື່ອງສຳອາງຫຼືນ້ຳມັນບໍ?",
       answer: "ແນະນຳໃຫ້ໃຊ້ນ້ຳມັນຫນ້າ ຫຼື serum ກ່ອນນວດກັວຊາ ເພື່ອໃຫ້ເຄື່ອງມືເລື່ອນໄດ້ງ່າຍແລະບໍ່ລະຄາຍເຄືອງຜິວ."
     },
     {
+      id: '4',
       question: "ເຫັນຜົນພາຍໃນເວລາໃດ?",
       answer: "ຜົນທັນທີທັນໃດແມ່ນຜິວໜ້າສົດໃສຂຶ້ນ. ສຳລັບຜົນໄລຍະຍາວເຊັ່ນ: ຫຼຸດຮອຍຊ້ຳ ຍົກກະຊັບໜ້າ ອາດໃຊ້ເວລາ 4-8 ອາທິດ ທີ່ໃຊ້ຢ່າງສະໝ່ຳສະເໝີ."
     },
     {
+      id: '5',
       question: "ເຄື່ອງມືກັວຊາເຮັດດ້ວຍວັດສະດຸຫຍັງດີສຸດ?",
       answer: "ແນະນຳໃຫ້ໃຊ້ກັວຊາຫີນເຈດ (Jade) ຫຼື ກ້ອນເຂັ້ວ (Rose Quartz) ເພາະມີຄຸນສົມບັດເຢັນ ຊ່ວຍຜ່ອນຄາຍຜິວໜ້າ ແລະໃຊ້ງານໄດ້ດີ."
     }
   ];
+
+  const displayFaqs = faqs.length > 0 ? faqs : defaultFaqs;
 
   return (
     <section ref={ref} className="py-24 px-4 bg-gradient-to-b from-pink-50 to-rococo-50">
@@ -51,9 +82,9 @@ export default function FAQ() {
         </motion.div>
 
         <div className="space-y-4">
-          {faqs.map((faq, index) => (
+          {displayFaqs.map((faq, index) => (
             <motion.div
-              key={index}
+              key={faq.id}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -88,7 +119,7 @@ export default function FAQ() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <p className="text-rococo-700 mt-4 leading-relaxed">
+                      <p className="text-rococo-700 mt-4 leading-relaxed whitespace-pre-line">
                         {faq.answer}
                       </p>
                     </motion.div>

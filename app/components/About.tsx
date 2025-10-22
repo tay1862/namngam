@@ -2,13 +2,43 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Heart, Sparkles, Leaf } from 'lucide-react';
 import Image from 'next/image';
+
+interface AboutSection {
+  id: string;
+  title: string;
+  titleEn?: string;
+  description: string;
+  image?: string;
+  backgroundImage?: string;
+  videoUrl?: string;
+}
 
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [section, setSection] = useState<AboutSection | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAbout();
+  }, []);
+
+  const fetchAbout = async () => {
+    try {
+      const res = await fetch('/api/admin/about');
+      const data = await res.json();
+      if (data && data.length > 0) {
+        setSection(data[0]); // Get first published section
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const features = [
     {
@@ -28,19 +58,20 @@ export default function About() {
     }
   ];
 
+  const backgroundImg = section?.backgroundImage || '/backgroud-about.jpeg';
+
   return (
     <section ref={ref} className="relative py-24 px-4 overflow-hidden">
-      {/* Background Image - Full Cover */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/backgroud-about.jpeg"
-          alt="Gua Sha Background"
+          src={backgroundImg}
+          alt="Background"
           fill
           className="object-cover"
           priority
         />
-        {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-rococo-5/5 via-white/5 to-white/5" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/70 to-white/80" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
@@ -51,11 +82,13 @@ export default function About() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-            ກັວຊາຄືຫຍັງ?
+            {section?.title || 'ກັວຊາຄືຫຍັງ?'}
           </h2>
-          <p className="text-lg text-rococo-700 max-w-3xl mx-auto">
-            ກັວຊາເປັນວິທີການນວດດັ້ງເດີມຂອງຈີນທີ່ມີມາເປັນເວລາຫຼາຍພັນປີ ໃຊ້ເຄື່ອງມືພິເສດຂູດຜິວໜ້າເບົາໆ 
-            ເພື່ອກະຕຸ້ນການໄຫຼວຽນຂອງເລືອດ ແລະຊ່ວຍໃຫ້ຜິວໜ້າແຂງແຮງຂຶ້ນ
+          {section?.titleEn && (
+            <p className="text-sm text-rococo-500 mb-3">{section.titleEn}</p>
+          )}
+          <p className="text-lg text-rococo-700 max-w-3xl mx-auto whitespace-pre-line">
+            {section?.description || 'ກັວຊາເປັນວິທີການນວດດັ້ງເດີມຂອງຈີນທີ່ມີມາເປັນເວລາຫຼາຍພັນປີ ໃຊ້ເຄື່ອງມືພິເສດຂູດຜິວໜ້າເບົາໆ ເພື່ອກະຕຸ້ນການໄຫຼວຽນຂອງເລືອດ ແລະຊ່ວຍໃຫ້ຜິວໜ້າແຂງແຮງຂຶ້ນ'}
           </p>
         </motion.div>
 
@@ -70,7 +103,7 @@ export default function About() {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-pink-200 to-rococo-200 rounded-3xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
               
-              <div className="relative bg-white/80 backdrop-blur-sm p-8 rounded-3xl border-2 border-pink-100 hover:border-pink-300 transition-all duration-300 hover:shadow-xl">
+              <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-3xl border-2 border-pink-100 hover:border-pink-300 transition-all duration-300 hover:shadow-xl">
                 <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <feature.icon className="w-8 h-8 text-white" />
                 </div>

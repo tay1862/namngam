@@ -2,62 +2,66 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import Image from 'next/image';
+
+interface BenefitItem {
+  id: string;
+  title: string;
+  titleEn?: string;
+  description: string;
+  icon?: string;
+  image?: string;
+  order: number;
+}
 
 export default function Benefits() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [benefits, setBenefits] = useState<BenefitItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const benefits = [
-    {
-      title: "ຫຼຸດຮອຍຊ້ຳ",
-      description: "ຊ່ວຍຫຼຸດຮອຍຊ້ຳແລະຮອຍເຫນື່ອຍຢູ່ໃຕ້ຕາ",
-      gradient: "from-pink-400 to-pink-600"
-    },
-    {
-      title: "ຍົກກະຊັບໜ້າ",
-      description: "ຊ່ວຍຍົກກະຊັບໜ້າໃຫ້ຕຶງຂຶ້ນຕາມທຳມະຊາດ",
-      gradient: "from-rococo-400 to-rococo-600"
-    },
-    {
-      title: "ຜິວໜ້າແວ່ວເງົາ",
-      description: "ເພີ່ມການໄຫຼວຽນ ເຮັດໃຫ້ຜິວໜ້າແວ່ວເງົາສົດໃສ",
-      gradient: "from-pink-500 to-rococo-500"
-    },
-    {
-      title: "ຫຼຸດຄວາມຕຶງຄຽດ",
-      description: "ຜ່ອນຄາຍກ້າມເນື້ອໜ້າ ຫຼຸດຄວາມເຄັ່ງຕຶງ",
-      gradient: "from-rococo-500 to-pink-500"
-    },
-    {
-      title: "ປັບໂຄງຫນ້າ",
-      description: "ຊ່ວຍປັບໂຄງຫນ້າໃຫ້ກົມກວນຂຶ້ນ",
-      gradient: "from-pink-400 to-rococo-400"
-    },
-    {
-      title: "ຫຼຸດສິວແລະສິ່ງເສດ",
-      description: "ຊ່ວຍຫຼຸດການເກີດສິວແລະສິ່ງເສດ",
-      gradient: "from-rococo-400 to-pink-500"
+  useEffect(() => {
+    fetchBenefits();
+  }, []);
+
+  const fetchBenefits = async () => {
+    try {
+      const res = await fetch('/api/admin/benefits');
+      const data = await res.json();
+      setBenefits(data);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Fallback if no benefits in database
+  const defaultBenefits = [
+    { id: '1', title: "ຫຼຸດຮອຍຊ້ຳ", description: "ຊ່ວຍຫຼຸດຮອຍຊ້ຳແລະຮອຍເຫນື່ອຍຢູ່ໃຕ້ຕາ", icon: "✨", order: 1 },
+    { id: '2', title: "ຍົກກະຊັບໜ້າ", description: "ຊ່ວຍຍົກກະຊັບໜ້າໃຫ້ຕຶງຂຶ້ນຕາມທຳມະຊາດ", icon: "💆‍♀️", order: 2 },
+    { id: '3', title: "ຜິວໜ້າແວ່ວເງົາ", description: "ເພີ່ມການໄຫຼວຽນ ເຮັດໃຫ້ຜິວໜ້າແວ່ວເງົາສົດໃສ", icon: "🌟", order: 3 },
+    { id: '4', title: "ຫຼຸດຄວາມຕຶງຄຽດ", description: "ຜ່ອນຄາຍກ້າມເນື້ອໜ້າ ຫຼຸດຄວາມເຄັ່ງຕຶງ", icon: "😌", order: 4 },
+    { id: '5', title: "ປັບໂຄງຫນ້າ", description: "ຊ່ວຍປັບໂຄງຫນ້າໃຫ້ກົມກວນຂຶ້ນ", icon: "💎", order: 5 },
+    { id: '6', title: "ຫຼຸດສິວ", description: "ຊ່ວຍຫຼຸດການເກີດສິວແລະສິ່ງເສດ", icon: "🌸", order: 6 },
+  ];
+
+  const displayBenefits = benefits.length > 0 ? benefits : defaultBenefits;
+
+  const gradients = [
+    "from-pink-400 to-pink-600",
+    "from-rococo-400 to-rococo-600",
+    "from-pink-500 to-rococo-500",
+    "from-rococo-500 to-pink-500",
+    "from-pink-400 to-rococo-400",
+    "from-rococo-400 to-pink-500"
   ];
 
   return (
     <section ref={ref} className="relative py-24 px-4 overflow-hidden">
-      {/* Video Background - Full Cover */}
-      <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ objectPosition: 'center 18%' }}
-        >
-          <source src="/video-background.mp4" type="video/mp4" />
-        </video>
-        {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-pink-5/5 to-white/5" />
-      </div>
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-rococo-50" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <motion.div
@@ -75,9 +79,9 @@ export default function Benefits() {
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {benefits.map((benefit, index) => (
+          {displayBenefits.map((benefit, index) => (
             <motion.div
-              key={index}
+              key={benefit.id}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -85,19 +89,27 @@ export default function Benefits() {
               className="group cursor-pointer"
             >
               <div className="relative h-full bg-white rounded-2xl p-6 border-2 border-pink-100 hover:border-pink-300 transition-all duration-300 hover:shadow-2xl overflow-hidden">
-                {/* Gradient overlay on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${benefit.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${gradients[index % gradients.length]} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                 
                 <div className="relative z-10">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${benefit.gradient} rounded-xl mb-4 flex items-center justify-center`}>
-                    <span className="text-2xl text-white">✨</span>
-                  </div>
+                  {benefit.image ? (
+                    <div className="w-12 h-12 relative rounded-xl mb-4 overflow-hidden">
+                      <Image src={benefit.image} alt={benefit.title} fill className="object-cover" />
+                    </div>
+                  ) : (
+                    <div className={`w-12 h-12 bg-gradient-to-br ${gradients[index % gradients.length]} rounded-xl mb-4 flex items-center justify-center`}>
+                      <span className="text-2xl">{benefit.icon || '✨'}</span>
+                    </div>
+                  )}
                   
                   <h3 className="text-xl font-bold text-rococo-900 mb-2">
                     {benefit.title}
                   </h3>
+                  {benefit.titleEn && (
+                    <p className="text-xs text-rococo-500 mb-2">{benefit.titleEn}</p>
+                  )}
                   
-                  <p className="text-rococo-700">
+                  <p className="text-rococo-700 whitespace-pre-line">
                     {benefit.description}
                   </p>
                 </div>
