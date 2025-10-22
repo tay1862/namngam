@@ -14,7 +14,7 @@ export default function Hero() {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.3, scale: 1 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5 }}
           className="relative w-[600px] h-[600px]"
         >
