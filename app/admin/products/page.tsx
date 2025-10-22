@@ -235,6 +235,33 @@ function ProductForm({
     featured: product?.featured || false,
   });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (data.url) {
+        setFormData(prev => ({ ...prev, image: data.url }));
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('ອັບໂຫຼດຮູບລົ້ມເຫລວ');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -337,16 +364,37 @@ function ProductForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              URL ຮູບພາບ *
+              ຮູບພາບສິນຄ້າ *
             </label>
-            <input
-              type="url"
-              required
-              value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              placeholder="https://..."
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
+            <div className="space-y-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-600 file:text-black file:font-semibold hover:file:bg-amber-700 disabled:opacity-50"
+              />
+              {formData.image && (
+                <div className="relative w-full h-48 bg-gray-800 rounded-xl overflow-hidden">
+                  <Image
+                    src={formData.image}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, image: '' })}
+                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              {uploading && (
+                <p className="text-sm text-amber-400">ກຳລັງອັບໂຫຼດ...</p>
+              )}
+            </div>
           </div>
 
           <div>

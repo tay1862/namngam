@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Eye, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface BlogPost {
   id: string;
@@ -238,6 +239,33 @@ function BlogForm({
     featured: post?.featured || false,
   });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+      const data = await res.json();
+      
+      if (data.url) {
+        setFormData(prev => ({ ...prev, image: data.url }));
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('ອັບໂຫຼດຮູບລົ້ມເຫລວ');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -322,30 +350,44 @@ function BlogForm({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                URL ຮູບພາບ *
-              </label>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              ຮູບພາບບົດຄວາມ *
+            </label>
+            <div className="space-y-3">
               <input
-                type="url"
-                required
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={uploading}
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-600 file:text-black file:font-semibold hover:file:bg-amber-700 disabled:opacity-50"
               />
+              {formData.image && (
+                <div className="relative w-full h-48 bg-gray-800 rounded-xl overflow-hidden">
+                  <Image
+                    src={formData.image}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              {uploading && (
+                <p className="text-sm text-amber-400">ກຳລັງອັບໂຫຼດ...</p>
+              )}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                ໝວດໝູ່
-              </label>
-              <input
-                type="text"
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-              />
-            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              ໝວດໝູ່
+            </label>
+            <input
+              type="text"
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+            />
           </div>
 
           <div className="flex gap-4">
