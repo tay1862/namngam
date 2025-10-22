@@ -18,7 +18,6 @@ export async function GET() {
         content: true,
         image: true,
         category: true,
-        tags: true,
         publishedAt: true,
         readTime: true,
         views: true,
@@ -31,13 +30,18 @@ export async function GET() {
       title: post.title,
       excerpt: post.excerpt,
       content: post.content,
-      date: post.publishedAt.toLocaleDateString('lo-LA', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
+      date: post.publishedAt 
+        ? post.publishedAt.toLocaleDateString('lo-LA', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })
+        : new Date().toLocaleDateString('lo-LA', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
       category: post.category,
-      tags: post.tags || [],
       image: post.image || '/placeholder-blog.jpg',
       readTime: post.readTime || '5 ນາທີ',
     }));
