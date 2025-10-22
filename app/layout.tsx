@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_Lao } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "./components/GoogleAnalytics";
+import { Providers } from "./providers";
 
 const notoSansLao = Noto_Sans_Lao({
   weight: ['300', '400', '500', '600', '700'],
@@ -53,7 +54,7 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
