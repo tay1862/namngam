@@ -1,26 +1,49 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { newsletterLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { isValidEmail, sanitizeHtml } from '@/lib/sanitize';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting by IP
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const rateLimitResult = await checkRateLimit(newsletterLimiter, ip);
+    
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: rateLimitResult.error },
+        { status: 429 }
+      );
+    }
+
     const { email } = await request.json();
 
-    // Validate email
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    // Validate and sanitize email
+    const sanitizedEmail = sanitizeHtml(email?.trim() || '');
+    
+    if (!sanitizedEmail || !isValidEmail(sanitizedEmail)) {
       return NextResponse.json(
-        { error: 'Invalid email address' },
+        { error: 'ອີເມວບໍ່ຖືກຕ້ອງ' },
+        { status: 400 }
+      );
+    }
+
+    // Check email length
+    if (sanitizedEmail.length > 255) {
+      return NextResponse.json(
+        { error: 'ອີເມວຍາວເກີນໄປ' },
         { status: 400 }
       );
     }
 
     // Check if already subscribed
     const existing = await prisma.subscriber.findUnique({
-      where: { email },
+      where: { email: sanitizedEmail.toLowerCase() },
     });
 
     if (existing) {
       return NextResponse.json(
-        { error: 'Already subscribed' },
+        { error: 'ອີເມວນີ້ສະໝັກແລ້ວ' },
         { status: 400 }
       );
     }
@@ -28,22 +51,20 @@ export async function POST(request: NextRequest) {
     // Save to database
     await prisma.subscriber.create({
       data: {
-        email,
+        email: sanitizedEmail.toLowerCase(),
         status: 'active',
         source: 'website',
       },
     });
 
-    console.log('Newsletter subscription:', email);
-
     return NextResponse.json(
-      { success: true, message: 'Subscribed successfully' },
+      { success: true, message: 'ສະໝັກສຳເລັດແລ້ວ' },
       { status: 200 }
     );
   } catch (error) {
     console.error('Newsletter error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'ເກີດຂໍ້ຜິດພາດ ກະລຸນາລອງໃໝ່' },
       { status: 500 }
     );
   }
