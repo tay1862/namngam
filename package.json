@@ -11,7 +11,8 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "create-admin": "ts-node scripts/create-admin.ts",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "fix-blog": "ts-node scripts/fix-blog-posts.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.0",
