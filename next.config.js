@@ -5,9 +5,6 @@ const withNextIntl = createNextIntlPlugin('./i18n.ts');
 const nextConfig = {
   reactStrictMode: true,
   
-  // Force standalone mode for VPS deployment
-  output: 'standalone',
-  
   // Skip errors during build (for VPS deployment)
   typescript: {
     ignoreBuildErrors: true,
