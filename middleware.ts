@@ -1,11 +1,10 @@
-import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from './i18n';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default createMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: 'as-needed',
-});
+export function middleware(request: NextRequest) {
+  // ปล่อยให้ทุก request ผ่านไปยัง pages โดยตรง
+  // ไม่ใช้ next-intl routing (ใช้เฉพาะ translations)
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [

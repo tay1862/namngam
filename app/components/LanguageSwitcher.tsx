@@ -1,8 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Globe } from 'lucide-react';
 
 const languages = [
@@ -13,23 +11,23 @@ const languages = [
 ];
 
 export default function LanguageSwitcher() {
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
+  const [locale, setLocale] = useState('lo');
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    // Get locale from localStorage or default to 'lo'
+    const savedLocale = localStorage.getItem('preferred-locale') || 'lo';
+    setLocale(savedLocale);
+  }, []);
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
 
   const switchLanguage = (newLocale: string) => {
-    // Remove current locale from pathname if exists
-    const pathnameWithoutLocale = pathname.replace(/^\/(lo|th|en|zh)/, '') || '/';
+    // Store locale in localStorage for now
+    localStorage.setItem('preferred-locale', newLocale);
     
-    // Add new locale (except default 'lo')
-    const newPath = newLocale === 'lo' 
-      ? pathnameWithoutLocale 
-      : `/${newLocale}${pathnameWithoutLocale}`;
-    
-    router.push(newPath);
+    // Reload page to apply new locale
+    window.location.reload();
     setIsOpen(false);
   };
 
