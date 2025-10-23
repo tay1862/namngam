@@ -54,7 +54,7 @@ export default function Footer() {
 
           {/* Links */}
           <div>
-            <h4 className="text-lg font-bold text-rococo-900 mb-4">ລິ້ງດ່ວນ</h4>
+            <h4 className="text-lg font-bold text-rococo-900 mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2">
               <li>
                 <a href="#about" className="text-rococo-700 hover:text-pink-600 transition-colors">

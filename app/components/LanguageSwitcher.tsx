@@ -20,8 +20,7 @@ export default function LanguageSwitcher() {
   const switchLanguage = (newLocale: 'lo' | 'th' | 'en' | 'zh') => {
     setLocale(newLocale);
     setIsOpen(false);
-    // Reload to apply new locale
-    window.location.reload();
+    // No reload needed - components will re-render automatically
   };
 
   return (

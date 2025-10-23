@@ -81,11 +81,11 @@ export default function Newsletter() {
             </motion.div>
 
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-              ຮັບຂໍ້ມູນຄວາມງາມແບບທຳມະຊາດ
+              {t('newsletter.title')}
             </h2>
 
             <p className="text-lg text-rococo-700 text-center mb-8 max-w-2xl mx-auto">
-              ສະໝັກຮັບຂ່າວສານເພື່ອໄດ້ຮັບເຄັດລັບການດູແລຜິວໜ້າ, ເທັກນິກກັວຊາ ແລະ ບົດຄວາມໃໝ່ໆ
+              {t('newsletter.subtitle')}
             </p>
 
             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
@@ -100,7 +100,7 @@ export default function Newsletter() {
                       setStatus('idle');
                       setMessage('');
                     }}
-                    placeholder="ອີເມວຂອງທ່ານ"
+                    placeholder={t('newsletter.placeholder')}
                     disabled={status === 'loading'}
                     className={`w-full pl-12 pr-4 py-4 rounded-full border-2 ${
                       status === 'error' ? 'border-red-500' : 'border-pink-200'
@@ -118,11 +118,11 @@ export default function Newsletter() {
                   {status === 'loading' ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-                      <span>ກຳລັງສົ່ງ...</span>
+                      <span>{t('common.loading')}</span>
                     </>
                   ) : (
                     <>
-                      <span>ສະໝັກ</span>
+                      <span>{t('newsletter.button')}</span>
                       <Send className="w-5 h-5" />
                     </>
                   )}

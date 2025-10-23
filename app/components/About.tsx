@@ -5,6 +5,8 @@ import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Heart, Sparkles, Leaf } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslations } from '@/lib/translations';
+import { useFetch } from '@/lib/hooks/useFetch';
 
 interface AboutSection {
   id: string;
@@ -19,43 +21,48 @@ interface AboutSection {
 }
 
 export default function About() {
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [section, setSection] = useState<AboutSection | null>(null);
-
-  useEffect(() => {
-    fetchAbout();
-  }, []);
-
-  const fetchAbout = async () => {
-    try {
-      const res = await fetch('/api/admin/about');
-      const data = await res.json();
-      if (data && data.length > 0) {
-        setSection(data[0]); // Get first published section
-      }
-    } catch {
-      console.error('Failed to fetch about section');
-    }
-  };
+  const { data: sections, loading } = useFetch<AboutSection[]>('/api/admin/about');
+  const section = sections?.[0];
 
   const features = [
     {
       icon: Heart,
-      title: "ປັບປຸງການໄຫຼວຽນຂອງເລືອດ",
-      description: "ກະຕຸ້ນການໄຫຼວຽນຂອງເລືອດແລະລິມພາ ເຮັດໃຫ້ຜິວໜ້າສົດໃສ"
+      title: t('about.features.circulation.title'),
+      description: t('about.features.circulation.description'),
     },
     {
       icon: Sparkles,
-      title: "ຫຼຸດຜ່ອນການອັກເສບ",
-      description: "ຊ່ວຍຫຼຸດການບວມແລະອາການອັກເສບຂອງຜິວໜ້າ"
+      title: t('about.features.inflammation.title'),
+      description: t('about.features.inflammation.description'),
     },
     {
       icon: Leaf,
-      title: "ທຳມະຊາດ 100%",
-      description: "ວິທີການດູແລຜິວໜ້າແບບທຳມະຊາດ ປອດໄພ ບໍ່ມີຜົນຂ້າງຄຽງ"
-    }
+      title: t('about.features.natural.title'),
+      description: t('about.features.natural.description'),
+    },
   ];
+  
+  if (loading) {
+    return (
+      <section id="about-section" ref={ref} className="relative py-24 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-rococo-50" />
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="animate-pulse text-center">
+            <div className="h-12 bg-gray-200 rounded w-1/3 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-8"></div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-64 bg-gray-200 rounded-3xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const backgroundType = section?.backgroundType || 'image';
   const backgroundImg = section?.backgroundImage || '/backgroud-about.jpeg';
@@ -93,13 +100,13 @@ export default function About() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-            {section?.title || 'ກັວຊາຄືຫຍັງ?'}
+            {section?.title || t('about.title')}
           </h2>
           {section?.titleEn && (
             <p className="text-sm text-rococo-500 mb-3">{section.titleEn}</p>
           )}
           <p className="text-lg text-rococo-700 max-w-3xl mx-auto whitespace-pre-line">
-            {section?.description || 'ກັວຊາເປັນວິທີການນວດດັ້ງເດີມຂອງຈີນທີ່ມີມາເປັນເວລາຫຼາຍພັນປີ ໃຊ້ເຄື່ອງມືພິເສດຂູດຜິວໜ້າເບົາໆ ເພື່ອກະຕຸ້ນການໄຫຼວຽນຂອງເລືອດ ແລະຊ່ວຍໃຫ້ຜິວໜ້າແຂງແຮງຂຶ້ນ'}
+            {section?.description || t('about.defaultDescription')}
           </p>
         </motion.div>
 

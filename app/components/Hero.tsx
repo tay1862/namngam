@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslations } from '@/lib/translations';
 
 export default function Hero() {
+  const { t } = useTranslations();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
       {/* Animated background gradient */}
@@ -94,7 +96,7 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-500/10 border border-pink-500/20 backdrop-blur-sm mb-8">
             <Sparkles className="w-4 h-4 text-pink-500" />
-            <span className="text-sm text-pink-600 font-medium">ຄວາມງາມແລະສຸຂະພາບທຳມະຊາດ</span>
+            <span className="text-sm text-pink-600 font-medium">{t('hero.badge')}</span>
           </div>
         </motion.div>
 
@@ -104,7 +106,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent"
         >
-          ກັວຊາ
+          {t('hero.title')}
         </motion.h1>
 
         <motion.p
@@ -113,7 +115,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl md:text-2xl text-rococo-800 mb-8 max-w-3xl mx-auto leading-relaxed"
         >
-          ວິທີການນວດດັ້ງເດີມຂອງຈີນ ເພື່ອສຸຂະພາບແລະຄວາມງາມຂອງຜິວໜ້າທ່ານ
+          {t('hero.subtitle')}
         </motion.p>
 
         <motion.div
@@ -129,7 +131,7 @@ export default function Hero() {
             }}
             className="group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-xl"
           >
-            <span className="relative z-10">ເລີ່ມຕົ້ນຮຽນຮູ້</span>
+            <span className="relative z-10">{t('hero.cta')}</span>
             <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
         </motion.div>

@@ -71,10 +71,10 @@ export default function FAQ() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-            ຄຳຖາມທີ່ພົບເລື້ອຍ
+            {t('faq.title')}
           </h2>
           <p className="text-lg text-rococo-700">
-            ຄຳຕອບສຳລັບຄຳຖາມທົ່ວໄປກ່ຽວກັບກັວຊາ
+            {t('faq.subtitle')}
           </p>
         </motion.div>
 

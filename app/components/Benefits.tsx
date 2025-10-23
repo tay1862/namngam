@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
+import { useTranslations } from '@/lib/translations';
+import { useFetch } from '@/lib/hooks/useFetch';
 
 interface BenefitItem {
   id: string;
@@ -16,23 +18,10 @@ interface BenefitItem {
 }
 
 export default function Benefits() {
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [benefits, setBenefits] = useState<BenefitItem[]>([]);
-
-  useEffect(() => {
-    fetchBenefits();
-  }, []);
-
-  const fetchBenefits = async () => {
-    try {
-      const res = await fetch('/api/admin/benefits');
-      const data = await res.json();
-      setBenefits(data);
-    } catch {
-      console.error('Failed to fetch benefits');
-    }
-  };
+  const { data: benefits, loading } = useFetch<BenefitItem[]>('/api/admin/benefits');
 
   // Fallback if no benefits in database
   const defaultBenefits: BenefitItem[] = [
@@ -44,7 +33,25 @@ export default function Benefits() {
     { id: '6', title: "ຫຼຸດສິວ", titleEn: undefined, description: "ຊ່ວຍຫຼຸດການເກີດສິວແລະສິ່ງເສດ", icon: "🌸", image: undefined, order: 6 },
   ];
 
-  const displayBenefits = benefits.length > 0 ? benefits : defaultBenefits;
+  const displayBenefits = benefits && benefits.length > 0 ? benefits : defaultBenefits;
+  
+  if (loading) {
+    return (
+      <section ref={ref} className="relative py-24 px-4 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-rococo-50" />
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-200 rounded w-1/3 mx-auto mb-16"></div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="h-48 bg-gray-200 rounded-2xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const gradients = [
     "from-pink-400 to-pink-600",
@@ -68,10 +75,10 @@ export default function Benefits() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-            ຜົນປະໂຫຍດຂອງກັວຊາ
+            {t('benefits.title')}
           </h2>
           <p className="text-lg text-rococo-700">
-            ຄົ້ນພົບການປ່ຽນແປງທີ່ກັວຊາຈະນຳມາໃຫ້ຜິວໜ້າຂອງທ່ານ
+            {t('benefits.subtitle')}
           </p>
         </motion.div>
 

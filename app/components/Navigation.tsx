@@ -5,8 +5,10 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslations } from '@/lib/translations';
 
 export default function Navigation() {
+  const { t } = useTranslations();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -19,11 +21,11 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { name: 'ໜ້າຫຼັກ', href: '/' },
-    { name: 'ກ່ຽວກັບ', href: '/#about' },
-    { name: 'ສິນຄ້າ', href: '/products' },
-    { name: 'ບົດຄວາມ', href: '/#blog' },
-    { name: 'ຕິດຕໍ່', href: '/#contact' },
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.about'), href: '/#about' },
+    { name: t('nav.products'), href: '/products' },
+    { name: t('nav.blog'), href: '/#blog' },
+    { name: t('nav.contact'), href: '/#contact' },
   ];
 
   return (
