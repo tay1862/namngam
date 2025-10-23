@@ -67,7 +67,7 @@ model Product {
   name        String
   nameEn      String?
   description String
-  price       String
+  price       String?  // Optional price
   image       String
   features    String[] // Array of features
   benefits    String[] // Array of benefits

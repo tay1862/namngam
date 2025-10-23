@@ -210,7 +210,7 @@ export default function ProductsPage() {
                       <div>
                         <p className="text-sm text-rococo-600 mb-1">ລາຄາ</p>
                         <p className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-                          {product.price}
+                          {product.price || 'ສອບຖາມລາຄາ'}
                         </p>
                       </div>
                       <a

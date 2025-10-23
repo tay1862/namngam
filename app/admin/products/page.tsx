@@ -350,14 +350,13 @@ function ProductForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              ລາຄາ *
+              ລາຄາ (ຖ້າບໍ່ໃສ່ຈະສະແດງ "ສອບຖາມລາຄາ")
             </label>
             <input
               type="text"
-              required
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              placeholder="250,000 ກີບ"
+              placeholder="250,000 ກີບ (ໃສ່ຫຼືບໍ່ໃສ່ກໍ່ໄດ້)"
               className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
             />
           </div>
