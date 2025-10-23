@@ -6,6 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, ArrowRight, Clock } from 'lucide-react';
 import Image from 'next/image';
+import BlogModal from './BlogModal';
 
 interface BlogPost {
   id?: number;
@@ -23,6 +24,7 @@ export default function BlogPreview() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPosts();
@@ -107,16 +109,14 @@ export default function BlogPreview() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {posts.map((post, index) => (
-            <Link
+            <motion.article
               key={post.slug || post.id}
-              href={`/blog/${post.slug}`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              className="group cursor-pointer"
+              onClick={() => setSelectedSlug(post.slug)}
             >
-              <motion.article
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="group cursor-pointer"
-              >
                 <div className="relative overflow-hidden rounded-2xl mb-4 h-64">
                   <div className="absolute inset-0 bg-gradient-to-t from-pink-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                   <Image
@@ -158,7 +158,6 @@ export default function BlogPreview() {
                   </div>
                 </div>
               </motion.article>
-            </Link>
           ))}
         </div>
 
@@ -175,6 +174,11 @@ export default function BlogPreview() {
           </Link>
         </motion.div>
       </div>
+
+      {/* Blog Modal */}
+      {selectedSlug && (
+        <BlogModal slug={selectedSlug} onClose={() => setSelectedSlug(null)} />
+      )}
     </section>
   );
 }
