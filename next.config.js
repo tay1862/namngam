@@ -5,6 +5,9 @@ const withNextIntl = createNextIntlPlugin('./i18n.ts');
 const nextConfig = {
   reactStrictMode: true,
   
+  // Force standalone mode for VPS deployment
+  output: 'standalone',
+  
   // Skip errors during build (for VPS deployment)
   typescript: {
     ignoreBuildErrors: true,
@@ -85,17 +88,12 @@ const nextConfig = {
 
   // Compression
   compress: true,
-
-  // Performance
-  swcMinify: true,
   
   // Production optimizations
   productionBrowserSourceMaps: false,
   
   // Turbopack
-  experimental: {
-    turbo: {},
-  },
+  turbopack: {},
 };
 
 module.exports = withNextIntl(nextConfig);
