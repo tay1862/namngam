@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "home": "首页",
+    "about": "关于",
+    "products": "产品",
+    "blog": "文章",
+    "contact": "联系"
+  },
+  "hero": {
+    "title": "发现自然之美",
+    "subtitle": "传统刮痧",
+    "cta": "开始了解"
+  },
+  "products": {
+    "title": "产品与服务",
+    "subtitle": "精选优质刮痧工具和天然护肤产品",
+    "price": "价格",
+    "contact": "咨询",
+    "askPrice": "询价"
+  },
+  "blog": {
+    "title": "文章与指南",
+    "subtitle": "与我们一起开启自然美容之旅",
+    "readMore": "阅读更多",
+    "viewAll": "查看所有文章",
+    "search": "搜索文章...",
+    "notFound": "未找到文章"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "minutes": "分钟"
+  }
+}

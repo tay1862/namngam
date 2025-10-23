@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "products": "Products",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Discover Natural Beauty",
+    "subtitle": "With Traditional Gua Sha",
+    "cta": "Get Started"
+  },
+  "products": {
+    "title": "Products & Services",
+    "subtitle": "Premium Gua Sha tools and natural skincare products",
+    "price": "Price",
+    "contact": "Contact",
+    "askPrice": "Ask for Price"
+  },
+  "blog": {
+    "title": "Articles & Guides",
+    "subtitle": "Start your journey to natural beauty with us",
+    "readMore": "Read More",
+    "viewAll": "View All Articles",
+    "search": "Search articles...",
+    "notFound": "No articles found"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "minutes": "min"
+  }
+}

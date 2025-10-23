@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -56,7 +57,7 @@ export default function Navigation() {
           </motion.a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
               <motion.a
                 key={link.name}
@@ -68,13 +69,7 @@ export default function Navigation() {
                 {link.name}
               </motion.a>
             ))}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-shadow"
-            >
-              ເລີ່ມຕົ້ນ
-            </motion.button>
+            <LanguageSwitcher />
           </div>
 
           {/* Mobile Menu Button */}
@@ -106,9 +101,9 @@ export default function Navigation() {
                 {link.name}
               </a>
             ))}
-            <button className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium">
-              ເລີ່ມຕົ້ນ
-            </button>
+            <div className="pt-4 border-t border-pink-100">
+              <LanguageSwitcher />
+            </div>
           </div>
         </motion.div>
       )}

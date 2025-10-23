@@ -64,13 +64,30 @@ model VerificationToken {
 // Products
 model Product {
   id          String   @id @default(cuid())
-  name        String
-  nameEn      String?
-  description String
+  
+  // Multi-language fields
+  name        String   // Lao (default)
+  nameTh      String?  // Thai
+  nameEn      String?  // English
+  nameZh      String?  // Chinese
+  
+  description String   // Lao (default)
+  descriptionTh String?  // Thai
+  descriptionEn String?  // English
+  descriptionZh String?  // Chinese
+  
   price       String?  // Optional price
   image       String
-  features    String[] // Array of features
-  benefits    String[] // Array of benefits
+  features    String[] // Array of features (Lao)
+  featuresTh  String[] @default([])
+  featuresEn  String[] @default([])
+  featuresZh  String[] @default([])
+  
+  benefits    String[] // Array of benefits (Lao)
+  benefitsTh  String[] @default([])
+  benefitsEn  String[] @default([])
+  benefitsZh  String[] @default([])
+  
   category    String   @default("ກັວຊາ")
   inStock     Boolean  @default(true)
   featured    Boolean  @default(false)
@@ -82,10 +99,25 @@ model Product {
 // Blog Posts
 model BlogPost {
   id          String   @id @default(cuid())
-  title       String
+  
+  // Multi-language fields
+  title       String   // Lao (default)
+  titleTh     String?  // Thai
+  titleEn     String?  // English
+  titleZh     String?  // Chinese
+  
   slug        String   @unique
-  excerpt     String
-  content     String   @db.Text
+  
+  excerpt     String   // Lao (default)
+  excerptTh   String?  // Thai
+  excerptEn   String?  // English
+  excerptZh   String?  // Chinese
+  
+  content     String   @db.Text  // Lao (default)
+  contentTh   String?  @db.Text  // Thai
+  contentEn   String?  @db.Text  // English
+  contentZh   String?  @db.Text  // Chinese
+  
   image       String
   category    String   @default("ທົ່ວໄປ")
   published   Boolean  @default(false)
@@ -103,8 +135,18 @@ model BlogPost {
 // FAQ
 model FAQ {
   id        String   @id @default(cuid())
-  question  String
-  answer    String   @db.Text
+  
+  // Multi-language fields
+  question  String   // Lao (default)
+  questionTh String? // Thai
+  questionEn String? // English
+  questionZh String? // Chinese
+  
+  answer    String   @db.Text  // Lao (default)
+  answerTh  String?  @db.Text  // Thai
+  answerEn  String?  @db.Text  // English
+  answerZh  String?  @db.Text  // Chinese
+  
   category  String   @default("ທົ່ວໄປ")
   order     Int      @default(0)
   published Boolean  @default(true)
