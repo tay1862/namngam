@@ -32,8 +32,20 @@ export default function ProductsPage() {
 
   const fetchProducts = async () => {
     try {
+      console.log('Fetching products from /api/products...');
       const response = await fetch('/api/products');
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        console.error('Failed to fetch products:', response.statusText);
+        setLoading(false);
+        return;
+      }
+      
       const data = await response.json();
+      console.log('Products fetched:', data.length, 'items');
+      console.log('Products data:', data);
+      
       setProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -52,6 +64,11 @@ export default function ProductsPage() {
       </>
     );
   }
+
+  // Debug log
+  console.log('Current products state:', products);
+  console.log('Products length:', products.length);
+  console.log('Loading:', loading);
 
   // Fallback products if DB is empty
   const displayProducts = products.length > 0 ? products : [
