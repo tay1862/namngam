@@ -11,6 +11,7 @@ const notoSansLao = Noto_Sans_Lao({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'),
   title: "NAMNGAM - ກັວຊາ ສຸຂະພາບແລະຄວາມງາມ",
   description: "NAMNGAM ຄູ່ມືການນວດກັວຊາ ເພື່ອສຸຂະພາບແລະຄວາມງາມທາງດ້ານຜິວໜ້າ ດ້ວຍວິທີທຳມະຊາດທີ່ປອດໄພ",
   keywords: ["ກັວຊາ", "Gua Sha", "NAMNGAM", "ຄວາມງາມ", "ສຸຂະພາບ", "ນວດ", "ຜິວໜ້າ", "ທຳມະຊາດ", "ລາວ"],
