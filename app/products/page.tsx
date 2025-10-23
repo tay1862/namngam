@@ -65,25 +65,7 @@ export default function ProductsPage() {
     );
   }
 
-  // Debug log
-  console.log('Current products state:', products);
-  console.log('Products length:', products.length);
-  console.log('Loading:', loading);
-  
-  // Detailed product inspection
-  if (products.length > 0) {
-    products.forEach((p, idx) => {
-      console.log(`Product ${idx + 1}:`, {
-        id: p.id,
-        name: p.name,
-        image: p.image,
-        features: p.features,
-        benefits: p.benefits,
-        hasFeatures: Array.isArray(p.features),
-        hasBenefits: Array.isArray(p.benefits),
-      });
-    });
-  }
+
 
   // Fallback products if DB is empty
   const displayProducts = products.length > 0 ? products : [
@@ -175,26 +157,16 @@ export default function ProductsPage() {
         </section>
 
         {/* Products Grid */}
-        <section ref={ref} className="py-16 px-4 bg-gray-50 min-h-screen">
-          <div className="max-w-7xl mx-auto">
-            {/* Debug Info */}
-            <div className="mb-8 p-4 bg-blue-100 border border-blue-300 rounded">
-              <p className="font-bold text-blue-900">Debug: แสดง {displayProducts.length} สินค้า</p>
-              <p className="text-sm text-blue-700">
-                {displayProducts.map(p => `${p.name} (${p.id})`).join(', ')}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-              {displayProducts.map((product, index) => {
-                console.log('Rendering product:', product.name, product.id);
-                return (
+        <section ref={ref} className="py-12 px-4 bg-gray-50">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayProducts.map((product, index) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-2xl overflow-hidden shadow-xl border-4 border-pink-500 mb-8"
+                  className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2 border-pink-200 hover:border-pink-400"
                 >
                   {/* Product Image */}
-                  <div className="relative h-80 overflow-hidden bg-pink-200">
+                  <div className="relative h-48 overflow-hidden bg-gray-100">
                     {product.image ? (
                       <Image
                         src={product.image}
@@ -208,36 +180,36 @@ export default function ProductsPage() {
                         <p className="text-pink-600 font-bold">ບໍ່ມີຮູບ</p>
                       </div>
                     )}
-                    <div className="absolute top-4 right-4">
-                      <div className="bg-yellow-400 px-4 py-2 rounded-full shadow-lg">
-                        <Star className="w-5 h-5 fill-white text-white inline" />
-                        <span className="font-bold text-gray-900 ml-1">Premium</span>
+                    <div className="absolute top-2 right-2">
+                      <div className="bg-yellow-400 px-3 py-1 rounded-full shadow-md">
+                        <Star className="w-4 h-4 fill-white text-white inline" />
+                        <span className="font-semibold text-gray-900 text-xs ml-1">Premium</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-8 bg-white">
-                    <div className="mb-6">
-                      <h3 className="text-3xl font-bold text-gray-900 mb-2">
+                  <div className="p-4 bg-white">
+                    <div className="mb-3">
+                      <h3 className="text-xl font-bold text-gray-900 mb-1">
                         {product.name}
                       </h3>
                       {product.nameEn && (
-                        <p className="text-base text-gray-600">{product.nameEn}</p>
+                        <p className="text-xs text-gray-500">{product.nameEn}</p>
                       )}
                     </div>
 
-                    <p className="text-gray-800 mb-6 text-lg leading-relaxed">
+                    <p className="text-gray-700 mb-3 text-sm line-clamp-2">
                       {product.description}
                     </p>
 
                     {/* Features */}
                     {product.features && product.features.length > 0 && (
-                      <div className="space-y-2 mb-4">
-                        {product.features.map((feature, i) => (
-                          <div key={i} className="flex items-start gap-2">
-                            <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                            <span className="text-sm text-gray-700">{feature}</span>
+                      <div className="space-y-1 mb-3">
+                        {product.features.slice(0, 3).map((feature, i) => (
+                          <div key={i} className="flex items-start gap-1">
+                            <Check className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-xs text-gray-600">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -245,11 +217,11 @@ export default function ProductsPage() {
 
                     {/* Benefits Tags */}
                     {product.benefits && product.benefits.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {product.benefits.map((benefit, i) => (
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {product.benefits.slice(0, 3).map((benefit, i) => (
                           <span
                             key={i}
-                            className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium"
+                            className="px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full text-xs font-medium"
                           >
                             {benefit}
                           </span>
@@ -258,10 +230,10 @@ export default function ProductsPage() {
                     )}
 
                     {/* Price & CTA */}
-                    <div className="pt-6 border-t-4 border-pink-200">
-                      <div className="mb-4">
-                        <p className="text-base text-gray-600 mb-2">ລາຄາ</p>
-                        <p className="text-4xl font-bold text-pink-600">
+                    <div className="pt-3 border-t border-pink-200">
+                      <div className="mb-2">
+                        <p className="text-xs text-gray-500">ລາຄາ</p>
+                        <p className="text-2xl font-bold text-pink-600">
                           {product.price || 'ສອບຖາມລາຄາ'}
                         </p>
                       </div>
@@ -269,16 +241,15 @@ export default function ProductsPage() {
                         href={`https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈ ${product.name}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full block text-center px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xl rounded-2xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3"
+                        className="w-full block text-center px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
                       >
-                        <Heart className="w-6 h-6" />
+                        <Heart className="w-4 h-4" />
                         <span>ສົນທະນາ</span>
                       </a>
                     </div>
                   </div>
                 </div>
-                );
-              })}
+              ))}
             </div>
           </div>
         </section>
