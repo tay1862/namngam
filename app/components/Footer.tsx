@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import { Heart, Mail, Facebook, Phone } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslations } from '@/lib/translations';
 
 export default function Footer() {
+  const { t } = useTranslations();
   const currentYear = new Date().getFullYear();
 
   return (
