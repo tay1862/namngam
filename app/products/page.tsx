@@ -7,6 +7,7 @@ import { Heart, Sparkles, Star, Check } from 'lucide-react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
+import { useLocale } from '../contexts/LocaleContext';
 
 interface Product {
   id: string;
@@ -153,7 +154,9 @@ export default function ProductsPage() {
         <section ref={ref} className="py-12 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayProducts.map((product) => (
+              {displayProducts.map((product) => {
+                const localizedProduct = getLocalizedProduct(product);
+                return (
                 <div
                   key={product.id}
                   className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2 border-pink-200 hover:border-pink-400"
@@ -163,7 +166,7 @@ export default function ProductsPage() {
                     {product.image ? (
                       <Image
                         src={product.image}
-                        alt={product.name}
+                        alt={localizedProduct.displayName}
                         fill
                         unoptimized={product.image.startsWith('/uploads')}
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -185,21 +188,18 @@ export default function ProductsPage() {
                   <div className="p-4 bg-white">
                     <div className="mb-3">
                       <h3 className="text-xl font-bold text-gray-900 mb-1">
-                        {product.name}
+                        {localizedProduct.displayName}
                       </h3>
-                      {product.nameEn && (
-                        <p className="text-xs text-gray-500">{product.nameEn}</p>
-                      )}
                     </div>
 
                     <p className="text-gray-700 mb-3 text-sm line-clamp-2">
-                      {product.description}
+                      {localizedProduct.displayDescription}
                     </p>
 
                     {/* Features */}
-                    {product.features && product.features.length > 0 && (
+                    {localizedProduct.displayFeatures && localizedProduct.displayFeatures.length > 0 && (
                       <div className="space-y-1 mb-3">
-                        {product.features.slice(0, 3).map((feature, i) => (
+                        {localizedProduct.displayFeatures.slice(0, 3).map((feature: string, i: number) => (
                           <div key={i} className="flex items-start gap-1">
                             <Check className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                             <span className="text-xs text-gray-600">{feature}</span>
@@ -209,9 +209,9 @@ export default function ProductsPage() {
                     )}
 
                     {/* Benefits Tags */}
-                    {product.benefits && product.benefits.length > 0 && (
+                    {localizedProduct.displayBenefits && localizedProduct.displayBenefits.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-3">
-                        {product.benefits.slice(0, 3).map((benefit, i) => (
+                        {localizedProduct.displayBenefits.slice(0, 3).map((benefit: string, i: number) => (
                           <span
                             key={i}
                             className="px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full text-xs font-medium"
@@ -231,7 +231,7 @@ export default function ProductsPage() {
                         </p>
                       </div>
                       <a
-                        href={`https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈ ${product.name}`}
+                        href={`https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈ ${localizedProduct.displayName}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full block text-center px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
@@ -242,7 +242,8 @@ export default function ProductsPage() {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         </section>
