@@ -186,16 +186,15 @@ export default function ProductsPage() {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-              {displayProducts.map((product, index) => (
-                <motion.div
+              {displayProducts.map((product, index) => {
+                console.log('Rendering product:', product.name, product.id);
+                return (
+                <div
                   key={product.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-4 border-pink-300"
+                  className="bg-white rounded-2xl overflow-hidden shadow-xl border-4 border-pink-500 mb-8"
                 >
                   {/* Product Image */}
-                  <div className="relative h-80 overflow-hidden bg-gray-200">
+                  <div className="relative h-80 overflow-hidden bg-pink-200">
                     {product.image ? (
                       <Image
                         src={product.image}
@@ -277,8 +276,9 @@ export default function ProductsPage() {
                       </a>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                </div>
+                );
+              })}
             </div>
           </div>
         </section>
