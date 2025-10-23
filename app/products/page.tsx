@@ -175,8 +175,16 @@ export default function ProductsPage() {
         </section>
 
         {/* Products Grid */}
-        <section ref={ref} className="py-16 px-4 bg-white">
+        <section ref={ref} className="py-16 px-4 bg-gray-50 min-h-screen">
           <div className="max-w-7xl mx-auto">
+            {/* Debug Info */}
+            <div className="mb-8 p-4 bg-blue-100 border border-blue-300 rounded">
+              <p className="font-bold text-blue-900">Debug: แสดง {displayProducts.length} สินค้า</p>
+              <p className="text-sm text-blue-700">
+                {displayProducts.map(p => `${p.name} (${p.id})`).join(', ')}
+              </p>
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
               {displayProducts.map((product, index) => (
                 <motion.div
@@ -184,35 +192,43 @@ export default function ProductsPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group bg-white rounded-3xl overflow-hidden border-2 border-pink-200 hover:border-pink-400 hover:shadow-2xl transition-all duration-300"
+                  className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-4 border-pink-300"
                 >
                   {/* Product Image */}
-                  <div className="relative h-64 overflow-hidden">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      unoptimized={product.image.startsWith('/uploads')}
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
+                  <div className="relative h-80 overflow-hidden bg-gray-200">
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        unoptimized={product.image.startsWith('/uploads')}
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-pink-100">
+                        <p className="text-pink-600 font-bold">ບໍ່ມີຮູບ</p>
+                      </div>
+                    )}
                     <div className="absolute top-4 right-4">
-                      <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-semibold text-gray-900">Premium</span>
+                      <div className="bg-yellow-400 px-4 py-2 rounded-full shadow-lg">
+                        <Star className="w-5 h-5 fill-white text-white inline" />
+                        <span className="font-bold text-gray-900 ml-1">Premium</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  <div className="p-8 bg-white">
+                    <div className="mb-6">
+                      <h3 className="text-3xl font-bold text-gray-900 mb-2">
                         {product.name}
                       </h3>
-                      <p className="text-sm text-gray-600">{product.nameEn}</p>
+                      {product.nameEn && (
+                        <p className="text-base text-gray-600">{product.nameEn}</p>
+                      )}
                     </div>
 
-                    <p className="text-gray-700 mb-4">
+                    <p className="text-gray-800 mb-6 text-lg leading-relaxed">
                       {product.description}
                     </p>
 
@@ -243,10 +259,10 @@ export default function ProductsPage() {
                     )}
 
                     {/* Price & CTA */}
-                    <div className="flex items-center justify-between pt-4 border-t border-pink-200">
-                      <div>
-                        <p className="text-sm text-gray-600 mb-1">ລາຄາ</p>
-                        <p className="text-2xl font-bold text-pink-600">
+                    <div className="pt-6 border-t-4 border-pink-200">
+                      <div className="mb-4">
+                        <p className="text-base text-gray-600 mb-2">ລາຄາ</p>
+                        <p className="text-4xl font-bold text-pink-600">
                           {product.price || 'ສອບຖາມລາຄາ'}
                         </p>
                       </div>
@@ -254,10 +270,10 @@ export default function ProductsPage() {
                         href={`https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈ ${product.name}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-6 py-3 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-shadow flex items-center gap-2"
+                        className="w-full block text-center px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-xl rounded-2xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3"
                       >
+                        <Heart className="w-6 h-6" />
                         <span>ສົນທະນາ</span>
-                        <Heart className="w-5 h-5" />
                       </a>
                     </div>
                   </div>
