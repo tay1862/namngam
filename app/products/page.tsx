@@ -177,6 +177,7 @@ export default function ProductsPage() {
                       src={product.image}
                       alt={product.name}
                       fill
+                      unoptimized={product.image.startsWith('/uploads')}
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute top-4 right-4">

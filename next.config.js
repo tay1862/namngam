@@ -29,8 +29,8 @@ const nextConfig = {
         port: '3001',
       },
     ],
-    // Disable optimization for development
-    unoptimized: false,
+    // Disable optimization for uploaded images
+    unoptimized: true,
   },
 
   // Security headers
