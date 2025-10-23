@@ -2,8 +2,10 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
+import { useTranslations } from '@/lib/translations';
+import { useFetch } from '@/lib/hooks/useFetch';
 
 interface FAQ {
   id: string;
@@ -12,24 +14,11 @@ interface FAQ {
 }
 
 export default function FAQ() {
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
-
-  useEffect(() => {
-    fetchFAQs();
-  }, []);
-
-  const fetchFAQs = async () => {
-    try {
-      const res = await fetch('/api/faq');
-      const data = await res.json();
-      setFaqs(data);
-    } catch {
-      console.error('Failed to fetch FAQs');
-    }
-  };
+  const { data: faqs, loading } = useFetch<FAQ[]>('/api/faq');
 
   const defaultFaqs = [
     {
@@ -59,7 +48,24 @@ export default function FAQ() {
     }
   ];
 
-  const displayFaqs = faqs.length > 0 ? faqs : defaultFaqs;
+  const displayFaqs = faqs && faqs.length > 0 ? faqs : defaultFaqs;
+  
+  if (loading) {
+    return (
+      <section ref={ref} className="py-24 px-4 bg-gradient-to-b from-pink-50 to-rococo-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-200 rounded w-1/3 mx-auto mb-16"></div>
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="h-20 bg-gray-200 rounded-2xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={ref} className="py-24 px-4 bg-gradient-to-b from-pink-50 to-rococo-50">
