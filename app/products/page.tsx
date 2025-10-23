@@ -182,7 +182,7 @@ export default function ProductsPage() {
                     <div className="absolute top-4 right-4">
                       <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-1">
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="font-semibold text-rococo-900">Premium</span>
+                        <span className="font-semibold text-gray-900">Premium</span>
                       </div>
                     </div>
                   </div>
@@ -190,13 +190,13 @@ export default function ProductsPage() {
                   {/* Product Info */}
                   <div className="p-6">
                     <div className="mb-4">
-                      <h3 className="text-2xl font-bold text-rococo-900 mb-1">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-1">
                         {product.name}
                       </h3>
-                      <p className="text-sm text-rococo-600">{product.nameEn}</p>
+                      <p className="text-sm text-gray-600">{product.nameEn}</p>
                     </div>
 
-                    <p className="text-rococo-700 mb-4">
+                    <p className="text-gray-700 mb-4">
                       {product.description}
                     </p>
 
@@ -205,7 +205,7 @@ export default function ProductsPage() {
                       {product.features.map((feature, i) => (
                         <div key={i} className="flex items-start gap-2">
                           <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-sm text-rococo-700">{feature}</span>
+                          <span className="text-sm text-gray-700">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -225,8 +225,8 @@ export default function ProductsPage() {
                     {/* Price & CTA */}
                     <div className="flex items-center justify-between pt-4 border-t border-pink-200">
                       <div>
-                        <p className="text-sm text-rococo-600 mb-1">ລາຄາ</p>
-                        <p className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
+                        <p className="text-sm text-gray-600 mb-1">ລາຄາ</p>
+                        <p className="text-2xl font-bold text-pink-600">
                           {product.price || 'ສອບຖາມລາຄາ'}
                         </p>
                       </div>
