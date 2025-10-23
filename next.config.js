@@ -13,7 +13,17 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'http',
+        hostname: '167.86.84.139',
+      },
     ],
+    // Allow local uploads
+    unoptimized: process.env.NODE_ENV === 'development',
   },
 
   // Security headers
