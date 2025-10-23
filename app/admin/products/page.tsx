@@ -350,7 +350,7 @@ function ProductForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              ລາຄາ (ຖ້າບໍ່ໃສ່ຈະສະແດງ "ສອບຖາມລາຄາ")
+              ລາຄາ (ຖ້າບໍ່ໃສ່ຈະສະແດງ &quot;ສອບຖາມລາຄາ&quot;)
             </label>
             <input
               type="text"
