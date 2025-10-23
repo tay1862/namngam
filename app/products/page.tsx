@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Heart, Sparkles, Star, Check } from 'lucide-react';
@@ -22,9 +21,7 @@ interface Product {
 
 export default function ProductsPage() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProducts();
@@ -38,7 +35,6 @@ export default function ProductsPage() {
       
       if (!response.ok) {
         console.error('Failed to fetch products:', response.statusText);
-        setLoading(false);
         return;
       }
       
@@ -47,25 +43,10 @@ export default function ProductsPage() {
       console.log('Products data:', data);
       
       setProducts(data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
+    } catch {
+      console.error('Failed to fetch products');
     }
   };
-
-  if (loading) {
-    return (
-      <>
-        <Navigation />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent" />
-        </div>
-      </>
-    );
-  }
-
-
 
   // Fallback products if DB is empty
   const displayProducts = products.length > 0 ? products : [
@@ -160,7 +141,7 @@ export default function ProductsPage() {
         <section ref={ref} className="py-12 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayProducts.map((product, index) => (
+              {displayProducts.map((product) => (
                 <div
                   key={product.id}
                   className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2 border-pink-200 hover:border-pink-400"

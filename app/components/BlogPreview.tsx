@@ -23,26 +23,24 @@ export default function BlogPreview() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
 
   const fetchPosts = async () => {
     try {
       const res = await fetch('/api/blog');
       const data = await res.json();
       setPosts(data.slice(0, 3)); // แสดงแค่ 3 บทความ
-    } catch (error) {
-      console.error('Error:', error);
+    } catch {
+      console.error('Failed to fetch blog posts');
       // Fallback data
       setPosts(fallbackPosts);
-    } finally {
-      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fallbackPosts: BlogPost[] = [
     {

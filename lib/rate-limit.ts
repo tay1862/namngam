@@ -32,7 +32,7 @@ export async function checkRateLimit(
   try {
     await limiter.consume(key);
     return { success: true };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: 'ທ່ານໃຊ້ງານບໍລິການບໍ່ຄົວເກີນກຳນົດ ກະລຸນາລອງໃໝ່ພາຍຫຼັງ',

@@ -22,7 +22,6 @@ export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [section, setSection] = useState<AboutSection | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchAbout();
@@ -35,10 +34,8 @@ export default function About() {
       if (data && data.length > 0) {
         setSection(data[0]); // Get first published section
       }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
+    } catch {
+      console.error('Failed to fetch about section');
     }
   };
 

@@ -8,6 +8,9 @@ import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <>

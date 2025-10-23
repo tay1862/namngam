@@ -16,7 +16,6 @@ export default function FAQ() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchFAQs();
@@ -27,10 +26,8 @@ export default function FAQ() {
       const res = await fetch('/api/faq');
       const data = await res.json();
       setFaqs(data);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
+    } catch {
+      console.error('Failed to fetch FAQs');
     }
   };
 

@@ -19,7 +19,6 @@ export default function Benefits() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [benefits, setBenefits] = useState<BenefitItem[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBenefits();
@@ -30,10 +29,8 @@ export default function Benefits() {
       const res = await fetch('/api/admin/benefits');
       const data = await res.json();
       setBenefits(data);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
+    } catch {
+      console.error('Failed to fetch benefits');
     }
   };
 

@@ -8,12 +8,23 @@ import Image from 'next/image';
 interface Product {
   id: string;
   name: string;
+  nameTh?: string;
   nameEn?: string;
+  nameZh?: string;
   description: string;
-  price: string;
+  descriptionTh?: string;
+  descriptionEn?: string;
+  descriptionZh?: string;
+  price?: string;
   image: string;
   features: string[];
+  featuresTh?: string[];
+  featuresEn?: string[];
+  featuresZh?: string[];
   benefits: string[];
+  benefitsTh?: string[];
+  benefitsEn?: string[];
+  benefitsZh?: string[];
   inStock: boolean;
   featured: boolean;
 }

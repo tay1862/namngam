@@ -3,6 +3,9 @@ import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import BlogGrid from '../components/BlogGrid';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 async function getBlogPosts() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
