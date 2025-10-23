@@ -241,6 +241,17 @@ function BlogForm({
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  // Generate slug from title
+  const generateSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      || `blog-${Date.now()}`;
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -275,10 +286,16 @@ function BlogForm({
       const url = post ? `/api/admin/blog/${post.id}` : '/api/admin/blog';
       const method = post ? 'PUT' : 'POST';
 
+      // Generate slug if creating new post
+      const submitData = {
+        ...formData,
+        slug: post?.slug || generateSlug(formData.title),
+      };
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       });
 
       if (response.ok) {
