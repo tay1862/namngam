@@ -16,14 +16,21 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
+        port: '3000',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
       },
       {
         protocol: 'http',
         hostname: '167.86.84.139',
+        port: '3001',
       },
     ],
-    // Allow local uploads
-    unoptimized: process.env.NODE_ENV === 'development',
+    // Disable optimization for development
+    unoptimized: false,
   },
 
   // Security headers

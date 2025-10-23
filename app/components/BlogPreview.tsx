@@ -2,18 +2,50 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Calendar, ArrowRight, Clock } from 'lucide-react';
 import Image from 'next/image';
+
+interface BlogPost {
+  id?: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  image: string;
+  date: string;
+  readTime: string;
+  category: string;
+}
 
 export default function BlogPreview() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Sample blog posts (will be replaced with CMS data)
-  const posts = [
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch('/api/blog');
+      const data = await res.json();
+      setPosts(data.slice(0, 3)); // แสดงแค่ 3 บทความ
+    } catch (error) {
+      console.error('Error:', error);
+      // Fallback data
+      setPosts(fallbackPosts);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fallbackPosts: BlogPost[] = [
     {
       id: 1,
+      slug: "beginner-gua-sha-guide",
       title: "ວິທີການເລີ່ມຕົ້ນນວດກັວຊາສຳລັບຜູ້ເລີ່ມຕົ້ນ",
       excerpt: "ຄຳແນະນຳສຳລັບຜູ້ທີ່ຕ້ອງການເລີ່ມນວດກັວຊາຄັ້ງທຳອິດ ເລີ່ມຕົ້ນຢ່າງປອດໄພແລະມີປະສິດທິພາບ",
       image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop",
@@ -23,6 +55,7 @@ export default function BlogPreview() {
     },
     {
       id: 2,
+      slug: "common-gua-sha-mistakes",
       title: "5 ຂໍ້ຜິດພາດທີ່ຄົນມັກເຮັດເວລານວດກັວຊາ",
       excerpt: "ຮູ້ຈັກຂໍ້ຜິດພາດທົ່ວໄປເພື່ອຫຼີກເວັ້ນແລະໄດ້ຮັບຜົນດີທີ່ສຸດຈາກການນວດ",
       image: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&auto=format&fit=crop",
@@ -32,6 +65,7 @@ export default function BlogPreview() {
     },
     {
       id: 3,
+      slug: "choose-right-gua-sha",
       title: "ເລືອກເຄື່ອງມືກັວຊາແນວໃດໃຫ້ເໝາະກັບຜິວໜ້າ",
       excerpt: "ຄຳແນະນຳໃນການເລືອກເຄື່ອງມືກັວຊາທີ່ເໝາະສົມກັບປະເພດຜິວແລະຄວາມຕ້ອງການຂອງທ່ານ",
       image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=800&auto=format&fit=crop",
@@ -73,54 +107,58 @@ export default function BlogPreview() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {posts.map((post, index) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="group cursor-pointer"
+            <Link
+              key={post.slug || post.id}
+              href={`/blog/${post.slug}`}
             >
-              <div className="relative overflow-hidden rounded-2xl mb-4 h-64">
-                <div className="absolute inset-0 bg-gradient-to-t from-pink-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  className="object-cover transform group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute top-4 left-4 z-20">
-                  <span className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-pink-600">
-                    {post.category}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-4 text-sm text-rococo-600">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={16} />
-                    <span>{post.date}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock size={16} />
-                    <span>{post.readTime}</span>
+              <motion.article
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className="group cursor-pointer"
+              >
+                <div className="relative overflow-hidden rounded-2xl mb-4 h-64">
+                  <div className="absolute inset-0 bg-gradient-to-t from-pink-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    className="object-cover transform group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 left-4 z-20">
+                    <span className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-pink-600">
+                      {post.category}
+                    </span>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-rococo-900 group-hover:text-pink-600 transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4 text-sm text-rococo-600">
+                    <div className="flex items-center gap-1">
+                      <Calendar size={16} />
+                      <span>{post.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock size={16} />
+                      <span>{post.readTime}</span>
+                    </div>
+                  </div>
 
-                <p className="text-rococo-700 line-clamp-3">
-                  {post.excerpt}
-                </p>
+                  <h3 className="text-xl font-bold text-rococo-900 group-hover:text-pink-600 transition-colors line-clamp-2">
+                    {post.title}
+                  </h3>
 
-                <div className="flex items-center gap-2 text-pink-600 font-medium group-hover:gap-4 transition-all">
-                  <span>ອ່ານຕໍ່</span>
-                  <ArrowRight size={20} />
+                  <p className="text-rococo-700 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-pink-600 font-medium group-hover:gap-4 transition-all">
+                    <span>ອ່ານຕໍ່</span>
+                    <ArrowRight size={20} />
+                  </div>
                 </div>
-              </div>
-            </motion.article>
+              </motion.article>
+            </Link>
           ))}
         </div>
 
@@ -130,9 +168,11 @@ export default function BlogPreview() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="text-center mt-12"
         >
-          <button className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium text-lg hover:shadow-xl transition-shadow">
-            ເບິ່ງບົດຄວາມທັງໝົດ
-          </button>
+          <Link href="/blog">
+            <button className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium text-lg hover:shadow-xl transition-shadow">
+              ເບິ່ງບົດຄວາມທັງໝົດ
+            </button>
+          </Link>
         </motion.div>
       </div>
     </section>

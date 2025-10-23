@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
-import { getAllBlogPosts, getBlogPost } from '../../../lib/blog';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
@@ -10,14 +9,23 @@ import ShareButtons from '../../components/ShareButtons';
 import ReactMarkdown from 'react-markdown';
 
 export async function generateStaticParams() {
-  const posts = getAllBlogPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/blog`, { cache: 'no-store' });
+    const posts = await res.json();
+    return posts.map((post: any) => ({
+      slug: post.slug,
+    }));
+  } catch (error) {
+    return [];
+  }
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const res = await fetch(`${baseUrl}/api/blog/${slug}`, { cache: 'no-store' });
+  const post = res.ok ? await res.json() : null;
   
   if (!post) {
     return {
@@ -38,12 +46,17 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug);
-
-  if (!post) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  
+  const res = await fetch(`${baseUrl}/api/blog/${slug}`, { cache: 'no-store' });
+  
+  if (!res.ok) {
     notFound();
   }
+  
+  const post = await res.json();
 
   return (
     <>
