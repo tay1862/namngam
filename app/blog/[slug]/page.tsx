@@ -12,11 +12,11 @@ export async function generateStaticParams() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     const res = await fetch(`${baseUrl}/api/blog`, { cache: 'no-store' });
-    const posts = await res.json();
-    return posts.map((post: any) => ({
+    const posts: { slug: string }[] = await res.json();
+    return posts.map((post) => ({
       slug: post.slug,
     }));
-  } catch (error) {
+  } catch {
     return [];
   }
 }
