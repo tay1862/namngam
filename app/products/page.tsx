@@ -56,7 +56,7 @@ export default function ProductsPage() {
   // Fallback products if DB is empty
   const displayProducts = products.length > 0 ? products : [
     {
-      id: 1,
+      id: "1",
       name: "ກັວຊາໄມ້ກ່ຽງ ຄລາສສິກ",
       nameEn: "Jade Gua Sha Classic",
       description: "ກັວຊາໄມ້ກ່ຽງແທ້ສຳລັບນວດໜ້າ ຊ່ວຍເສີມສາອາງຜິວໜ້າແລະຜ່ອນຄາຍກ້າມຊີ້ນ",
@@ -71,7 +71,7 @@ export default function ProductsPage() {
       benefits: ["ຜິວໜ້າກະຊັບ", "ຫຼຸດການບວມ", "ຜ່ອນຄາຍ"]
     },
     {
-      id: 2,
+      id: "2",
       name: "ກັວຊາກົ້ນໝູ ພຣີມຽມ",
       nameEn: "Rose Quartz Gua Sha Premium",
       description: "ກັວຊາຫີນກົ້ນໝູ ໃຫ້ພລັງງານຄວາມຮັກແລະຄວາມງາມທາງດ້ານຜິວໜ້າ",
@@ -86,7 +86,7 @@ export default function ProductsPage() {
       benefits: ["ຜິວກະທັດຮັດ", "ຄວາມມືດຄ່ຳ", "ຄວາມສົດໃສ"]
     },
     {
-      id: 3,
+      id: "3",
       name: "ຊຸດກັວຊາສຸດພິເສດ",
       nameEn: "Gua Sha Deluxe Set",
       description: "ຊຸດກັວຊາຄົບຊຸດພ້ອມນ້ຳມັນນວດແລະຄູ່ມືການໃຊ້ງານ",
@@ -101,7 +101,7 @@ export default function ProductsPage() {
       benefits: ["ຄຸ້ມຄ່າທີ່ສຸດ", "ຄົບຊຸດ", "ຂອງຂວັນສຸດພິເສດ"]
     },
     {
-      id: 4,
+      id: "4",
       name: "ນ້ຳມັນນວດຫົວທຳມະຊາດ",
       nameEn: "Natural Facial Oil",
       description: "ນ້ຳມັນນວດໜ້າອິນຊີສູດພິເศດສຳລັບໃຊ້ຄູ່ກັບກັວຊາ",
