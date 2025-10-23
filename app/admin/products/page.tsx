@@ -225,17 +225,29 @@ function ProductForm({
 }) {
   const [formData, setFormData] = useState({
     name: product?.name || '',
+    nameTh: product?.nameTh || '',
     nameEn: product?.nameEn || '',
+    nameZh: product?.nameZh || '',
     description: product?.description || '',
+    descriptionTh: product?.descriptionTh || '',
+    descriptionEn: product?.descriptionEn || '',
+    descriptionZh: product?.descriptionZh || '',
     price: product?.price || '',
     image: product?.image || '',
     features: product?.features?.join('\n') || '',
+    featuresTh: product?.featuresTh?.join('\n') || '',
+    featuresEn: product?.featuresEn?.join('\n') || '',
+    featuresZh: product?.featuresZh?.join('\n') || '',
     benefits: product?.benefits?.join('\n') || '',
+    benefitsTh: product?.benefitsTh?.join('\n') || '',
+    benefitsEn: product?.benefitsEn?.join('\n') || '',
+    benefitsZh: product?.benefitsZh?.join('\n') || '',
     inStock: product?.inStock !== false,
     featured: product?.featured || false,
   });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'lo' | 'th' | 'en' | 'zh'>('lo');
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -279,7 +291,13 @@ function ProductForm({
         body: JSON.stringify({
           ...formData,
           features: formData.features.split('\n').filter((f) => f.trim()),
+          featuresTh: formData.featuresTh.split('\n').filter((f) => f.trim()),
+          featuresEn: formData.featuresEn.split('\n').filter((f) => f.trim()),
+          featuresZh: formData.featuresZh.split('\n').filter((f) => f.trim()),
           benefits: formData.benefits.split('\n').filter((b) => b.trim()),
+          benefitsTh: formData.benefitsTh.split('\n').filter((b) => b.trim()),
+          benefitsEn: formData.benefitsEn.split('\n').filter((b) => b.trim()),
+          benefitsZh: formData.benefitsZh.split('\n').filter((b) => b.trim()),
         }),
       });
 
@@ -308,45 +326,276 @@ function ProductForm({
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຊື່ສິນຄ້າ (ລາວ) *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
+          {/* Language Tabs */}
+          <div className="flex gap-2 bg-gray-800/70 border border-gray-700 rounded-xl p-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab('lo')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'lo' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇱🇦 ລາວ
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('th')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'th' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇹🇭 ไทย
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('en')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'en' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇬🇧 EN
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('zh')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'zh' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇨🇳 中文
+            </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຊື່ສິນຄ້າ (English)
-            </label>
-            <input
-              type="text"
-              value={formData.nameEn}
-              onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
-          </div>
+          {/* Lao Tab */}
+          {activeTab === 'lo' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ຊື່ສິນຄ້າ (ລາວ) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ລາຍລະອຽດ *
-            </label>
-            <textarea
-              required
-              rows={3}
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
-          </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ລາຍລະອຽດ (ລາວ) *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ຄຸນສົມບັດ (ແຕ່ລະບັນທຶກຂຶ້ນບົດໃໝ່)
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.features}
+                  onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                  placeholder="ໄມ້ກ່ຽງແທ້ 100%&#10;ຊ່ວຍຜ່ອນຄາຍກ້າມຊີ້ນໜ້າ"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ຜົນປະໂຫຍດ (ແຕ່ລະບັນທຶກຂຶ້ນບົດໃໝ່)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.benefits}
+                  onChange={(e) => setFormData({ ...formData, benefits: e.target.value })}
+                  placeholder="ຜິວໜ້າກະຊັບ&#10;ຫຼຸດການບວມ"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Thai Tab */}
+          {activeTab === 'th' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ชื่อสินค้า (ไทย)
+                </label>
+                <input
+                  type="text"
+                  value={formData.nameTh}
+                  onChange={(e) => setFormData({ ...formData, nameTh: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                  placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  รายละเอียด (ไทย)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.descriptionTh}
+                  onChange={(e) => setFormData({ ...formData, descriptionTh: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                  placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  คุณสมบัติ (แต่ละบรรทัดขึ้นบรรทัดใหม่)
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.featuresTh}
+                  onChange={(e) => setFormData({ ...formData, featuresTh: e.target.value })}
+                  placeholder="หยกแท้ 100%&#10;ช่วยผ่อนคลายกล้ามเนื้อ"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ผลประโยชน์ (แต่ละบรรทัดขึ้นบรรทัดใหม่)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.benefitsTh}
+                  onChange={(e) => setFormData({ ...formData, benefitsTh: e.target.value })}
+                  placeholder="ผิวกระชับ&#10;ลดการบวม"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+            </>
+          )}
+
+          {/* English Tab */}
+          {activeTab === 'en' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Product Name (English)
+                </label>
+                <input
+                  type="text"
+                  value={formData.nameEn}
+                  onChange={(e) => setFormData({ ...formData, nameEn: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                  placeholder="If empty, will use Lao"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Description (English)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.descriptionEn}
+                  onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                  placeholder="If empty, will use Lao"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Features (one per line)
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.featuresEn}
+                  onChange={(e) => setFormData({ ...formData, featuresEn: e.target.value })}
+                  placeholder="100% Authentic Jade&#10;Relaxes facial muscles"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Benefits (one per line)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.benefitsEn}
+                  onChange={(e) => setFormData({ ...formData, benefitsEn: e.target.value })}
+                  placeholder="Firm skin&#10;Reduce swelling"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Chinese Tab */}
+          {activeTab === 'zh' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  产品名称 (中文)
+                </label>
+                <input
+                  type="text"
+                  value={formData.nameZh}
+                  onChange={(e) => setFormData({ ...formData, nameZh: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                  placeholder="如果为空，将使用老挝语"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  产品描述 (中文)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.descriptionZh}
+                  onChange={(e) => setFormData({ ...formData, descriptionZh: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                  placeholder="如果为空，将使用老挝语"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  特点 (每行一个)
+                </label>
+                <textarea
+                  rows={4}
+                  value={formData.featuresZh}
+                  onChange={(e) => setFormData({ ...formData, featuresZh: e.target.value })}
+                  placeholder="100%真玉&#10;放松面部肌肉"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  益处 (每行一个)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.benefitsZh}
+                  onChange={(e) => setFormData({ ...formData, benefitsZh: e.target.value })}
+                  placeholder="紧致肌肤&#10;减少肿胀"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Common Fields - Price, Image, Checkboxes */}
+          <div className="pt-4 border-t border-gray-700 space-y-4">
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -396,36 +645,6 @@ function ProductForm({
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຄຸນສົມບັດ (ແຕ່ລະບັນທຶກຂຶ້ນບົດໃໝ່)
-            </label>
-            <textarea
-              rows={4}
-              value={formData.features}
-              onChange={(e) =>
-                setFormData({ ...formData, features: e.target.value })
-              }
-              placeholder="ໄມ້ກ່ຽງແທ້ 100%&#10;ຊ່ວຍຜ່ອນຄາຍກ້າມຊີ້ນໜ້າ"
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຜົນປະໂຫຍດ (ແຕ່ລະບັນທຶກຂຶ້ນບົດໃໝ່)
-            </label>
-            <textarea
-              rows={3}
-              value={formData.benefits}
-              onChange={(e) =>
-                setFormData({ ...formData, benefits: e.target.value })
-              }
-              placeholder="ຜິວໜ້າກະຊັບ&#10;ຫຼຸດການບວມ"
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
-          </div>
-
           <div className="flex gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -449,6 +668,7 @@ function ProductForm({
               />
               <span className="text-white">ສິນຄ້າແນະນຳ</span>
             </label>
+          </div>
           </div>
 
           {/* Actions */}
