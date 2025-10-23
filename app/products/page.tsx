@@ -69,6 +69,21 @@ export default function ProductsPage() {
   console.log('Current products state:', products);
   console.log('Products length:', products.length);
   console.log('Loading:', loading);
+  
+  // Detailed product inspection
+  if (products.length > 0) {
+    products.forEach((p, idx) => {
+      console.log(`Product ${idx + 1}:`, {
+        id: p.id,
+        name: p.name,
+        image: p.image,
+        features: p.features,
+        benefits: p.benefits,
+        hasFeatures: Array.isArray(p.features),
+        hasBenefits: Array.isArray(p.benefits),
+      });
+    });
+  }
 
   // Fallback products if DB is empty
   const displayProducts = products.length > 0 ? products : [
@@ -202,26 +217,30 @@ export default function ProductsPage() {
                     </p>
 
                     {/* Features */}
-                    <div className="space-y-2 mb-4">
-                      {product.features.map((feature, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-sm text-gray-700">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
+                    {product.features && product.features.length > 0 && (
+                      <div className="space-y-2 mb-4">
+                        {product.features.map((feature, i) => (
+                          <div key={i} className="flex items-start gap-2">
+                            <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-sm text-gray-700">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
                     {/* Benefits Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {product.benefits.map((benefit, i) => (
-                        <span
-                          key={i}
-                          className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium"
-                        >
-                          {benefit}
-                        </span>
-                      ))}
-                    </div>
+                    {product.benefits && product.benefits.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {product.benefits.map((benefit, i) => (
+                          <span
+                            key={i}
+                            className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium"
+                          >
+                            {benefit}
+                          </span>
+                        ))}
+                      </div>
+                    )}
 
                     {/* Price & CTA */}
                     <div className="flex items-center justify-between pt-4 border-t border-pink-200">
