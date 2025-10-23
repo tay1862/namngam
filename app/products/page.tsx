@@ -22,16 +22,18 @@ interface Product {
 export default function ProductsPage() {
   const ref = useRef(null);
   const [products, setProducts] = useState<Product[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
-      console.log('Fetching products from /api/products...');
-      const response = await fetch('/api/products');
-      console.log('Response status:', response.status);
+      const response = await fetch('/api/products', {
+        cache: 'no-store',
+      });
       
       if (!response.ok) {
         console.error('Failed to fetch products:', response.statusText);
@@ -39,14 +41,24 @@ export default function ProductsPage() {
       }
       
       const data = await response.json();
-      console.log('Products fetched:', data.length, 'items');
-      console.log('Products data:', data);
-      
       setProducts(data);
     } catch {
       console.error('Failed to fetch products');
     }
   };
+
+  // Prevent SSR
+  if (!mounted) {
+    return (
+      <>
+        <Navigation />
+        <div className="min-h-screen flex items-center justify-center pt-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent" />
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   // Fallback products if DB is empty
   const displayProducts = products.length > 0 ? products : [
