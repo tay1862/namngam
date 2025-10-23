@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Globe } from 'lucide-react';
+import { useLocale } from '../contexts/LocaleContext';
 
 const languages = [
   { code: 'lo', name: 'ລາວ', flag: '🇱🇦' },
@@ -11,24 +12,16 @@ const languages = [
 ];
 
 export default function LanguageSwitcher() {
-  const [locale, setLocale] = useState('lo');
+  const { locale, setLocale } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    // Get locale from localStorage or default to 'lo'
-    const savedLocale = localStorage.getItem('preferred-locale') || 'lo';
-    setLocale(savedLocale);
-  }, []);
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
 
-  const switchLanguage = (newLocale: string) => {
-    // Store locale in localStorage for now
-    localStorage.setItem('preferred-locale', newLocale);
-    
-    // Reload page to apply new locale
-    window.location.reload();
+  const switchLanguage = (newLocale: 'lo' | 'th' | 'en' | 'zh') => {
+    setLocale(newLocale);
     setIsOpen(false);
+    // Reload to apply new locale
+    window.location.reload();
   };
 
   return (
