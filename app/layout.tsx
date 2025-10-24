@@ -40,16 +40,16 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/Logo-namngam-white.png", sizes: "any" },
-      { url: "/Logo-namngam-white.png", type: "image/png", sizes: "192x192" },
+      { url: "/Logo-namngam-gold.png", sizes: "any" },
+      { url: "/Logo-namngam-gold.png", type: "image/png", sizes: "192x192" },
     ],
     apple: [
-      { url: "/Logo-namngam-white.png", sizes: "180x180", type: "image/png" },
+      { url: "/Logo-namngam-gold.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       {
         rel: "mask-icon",
-        url: "/Logo-namngam-white.png",
+        url: "/Logo-namngam-gold.png",
       },
     ],
   },
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     siteName: "NAMNGAM Gua Sha",
     images: [
       {
-        url: "/Logo-namngam-white.png",
+        url: "/Logo-namngam-gold.png",
         width: 1200,
         height: 630,
         alt: "NAMNGAM - Gua Sha Tools & Facial Massage Guide",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NAMNGAM - Gua Sha ກັວຊາ | ຄວາມງາມແລະສຸຂະພາບທຳມະຊາດ",
     description: "ເຄື່ອງມືກັວຊາແທ້ແລະຄູ່ມືການນວດດັ້ງເດີມ ຫຼຸດຮອຍຊ້ຳ ຍົກກະຊັບໜ້າ ວິທີທຳມະຊາດທີ່ປອດໄພ",
-    images: ["/Logo-namngam-white.png"],
+    images: ["/Logo-namngam-gold.png"],
     creator: "@namngam",
   },
   robots: {

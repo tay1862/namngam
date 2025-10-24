@@ -8,7 +8,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'namngam.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
     ],
+    unoptimized: false, // Enable image optimization
   },
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 };

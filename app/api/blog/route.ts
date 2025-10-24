@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getCachedBlogPosts } from '@/lib/cache';
 
+export const dynamic = 'force-dynamic'; // Disable caching for this route temporarily
+export const revalidate = 0; // Revalidate on every request
+
 export async function GET() {
   try {
+    console.log('[Blog API] Fetching blog posts...');
     const posts = await getCachedBlogPosts();
+    console.log(`[Blog API] Found ${posts.length} posts`);
 
     // Format for frontend
     const formattedPosts = posts.map(post => ({
@@ -27,9 +32,10 @@ export async function GET() {
       readTime: post.readTime || '5 ນາທີ',
     }));
 
+    console.log(`[Blog API] Returning ${formattedPosts.length} formatted posts`);
     return NextResponse.json(formattedPosts);
   } catch (error) {
-    console.error('Blog API error:', error);
+    console.error('[Blog API] Error:', error);
     return NextResponse.json([], { status: 200 }); // Return empty array on error
   }
 }
