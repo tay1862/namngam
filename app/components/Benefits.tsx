@@ -4,36 +4,45 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
-import { useTranslations } from '@/lib/translations';
+import { useTranslations, localizeBenefitItem } from '@/lib/translations';
 import { useFetch } from '@/lib/hooks/useFetch';
 
 interface BenefitItem {
   id: string;
   title: string;
+  titleTh?: string;
   titleEn?: string;
+  titleZh?: string;
   description: string;
+  descriptionTh?: string;
+  descriptionEn?: string;
+  descriptionZh?: string;
   icon?: string;
   image?: string;
   order: number;
 }
 
 export default function Benefits() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: benefits, loading } = useFetch<BenefitItem[]>('/api/admin/benefits');
 
   // Fallback if no benefits in database
   const defaultBenefits: BenefitItem[] = [
-    { id: '1', title: "ຫຼຸດຮອຍຊ້ຳ", titleEn: undefined, description: "ຊ່ວຍຫຼຸດຮອຍຊ້ຳແລະຮອຍເຫນື່ອຍຢູ່ໃຕ້ຕາ", icon: "✨", image: undefined, order: 1 },
-    { id: '2', title: "ຍົກກະຊັບໜ້າ", titleEn: undefined, description: "ຊ່ວຍຍົກກະຊັບໜ້າໃຫ້ຕຶງຂຶ້ນຕາມທຳມະຊາດ", icon: "💆‍♀️", image: undefined, order: 2 },
-    { id: '3', title: "ຜິວໜ້າແວ່ວເງົາ", titleEn: undefined, description: "ເພີ່ມການໄຫຼວຽນ ເຮັດໃຫ້ຜິວໜ້າແວ່ວເງົາສົດໃສ", icon: "🌟", image: undefined, order: 3 },
-    { id: '4', title: "ຫຼຸດຄວາມຕຶງຄຽດ", titleEn: undefined, description: "ຜ່ອນຄາຍກ້າມເນື້ອໜ້າ ຫຼຸດຄວາມເຄັ່ງຕຶງ", icon: "😌", image: undefined, order: 4 },
-    { id: '5', title: "ປັບໂຄງຫນ້າ", titleEn: undefined, description: "ຊ່ວຍປັບໂຄງຫນ້າໃຫ້ກົມກວນຂຶ້ນ", icon: "💎", image: undefined, order: 5 },
-    { id: '6', title: "ຫຼຸດສິວ", titleEn: undefined, description: "ຊ່ວຍຫຼຸດການເກີດສິວແລະສິ່ງເສດ", icon: "🌸", image: undefined, order: 6 },
+    { id: '1', title: "ຫຼຸດຮອຍຊ້ຳ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ຊ່ວຍຫຼຸດຮອຍຊ້ຳແລະຮອຍເຫນື່ອຍຢູ່ໃຕ້ຕາ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "✨", image: undefined, order: 1 },
+    { id: '2', title: "ຍົກກະຊັບໜ້າ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ຊ່ວຍຍົກກະຊັບໜ້າໃຫ້ຕຶງຂຶ້ນຕາມທຳມະຊາດ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "💆‍♀️", image: undefined, order: 2 },
+    { id: '3', title: "ຜິວໜ້າແວ່ວເງົາ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ເພີ່ມການໄຫຼວຽນ ເຮັດໃຫ້ຜິວໜ້າແວ່ວເງົາສົດໃສ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "🌟", image: undefined, order: 3 },
+    { id: '4', title: "ຫຼຸດຄວາມຕຶງຄຽດ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ຜ່ອນຄາຍກ້າມເນື້ອໜ້າ ຫຼຸດຄວາມເຄັ່ງຕຶງ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "😌", image: undefined, order: 4 },
+    { id: '5', title: "ປັບໂຄງຫນ້າ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ຊ່ວຍປັບໂຄງຫນ້າໃຫ້ກົມກວນຂຶ້ນ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "💎", image: undefined, order: 5 },
+    { id: '6', title: "ຫຼຸດສິວ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ຊ່ວຍຫຼຸດການເກີດສິວແລະສິ່ງເສດ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "🌸", image: undefined, order: 6 },
   ];
 
-  const displayBenefits = benefits && benefits.length > 0 ? benefits : defaultBenefits;
+  // Localize benefits based on current language
+  const localizedBenefits = benefits && benefits.length > 0 
+    ? benefits.map(b => localizeBenefitItem(b, locale)) 
+    : defaultBenefits;
+  const displayBenefits = localizedBenefits;
   
   if (loading) {
     return (
@@ -107,14 +116,11 @@ export default function Benefits() {
                   )}
                   
                   <h3 className="text-xl font-bold text-rococo-900 mb-2">
-                    {benefit.title}
+                    {benefit.displayTitle || benefit.title}
                   </h3>
-                  {benefit.titleEn && (
-                    <p className="text-xs text-rococo-500 mb-2">{benefit.titleEn}</p>
-                  )}
                   
                   <p className="text-rococo-700 whitespace-pre-line">
-                    {benefit.description}
+                    {benefit.displayDescription || benefit.description}
                   </p>
                 </div>
               </div>

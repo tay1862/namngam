@@ -5,14 +5,19 @@ import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Heart, Sparkles, Leaf } from 'lucide-react';
 import Image from 'next/image';
-import { useTranslations } from '@/lib/translations';
+import { useTranslations, localizeAboutSection } from '@/lib/translations';
 import { useFetch } from '@/lib/hooks/useFetch';
 
 interface AboutSection {
   id: string;
   title: string;
+  titleTh?: string;
   titleEn?: string;
+  titleZh?: string;
   description: string;
+  descriptionTh?: string;
+  descriptionEn?: string;
+  descriptionZh?: string;
   image?: string;
   backgroundType?: string;
   backgroundImage?: string;
@@ -21,11 +26,12 @@ interface AboutSection {
 }
 
 export default function About() {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: sections, loading } = useFetch<AboutSection[]>('/api/admin/about');
-  const section = sections?.[0];
+  const rawSection = sections?.[0];
+  const section = rawSection ? localizeAboutSection(rawSection, locale) : null;
 
   const features = [
     {
@@ -100,13 +106,10 @@ export default function About() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-            {section?.title || t('about.title')}
+            {section?.displayTitle || section?.title || t('about.title')}
           </h2>
-          {section?.titleEn && (
-            <p className="text-sm text-rococo-500 mb-3">{section.titleEn}</p>
-          )}
           <p className="text-lg text-rococo-700 max-w-3xl mx-auto whitespace-pre-line">
-            {section?.description || t('about.defaultDescription')}
+            {section?.displayDescription || section?.description || t('about.defaultDescription')}
           </p>
         </motion.div>
 
