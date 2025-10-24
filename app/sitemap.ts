@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllBlogPosts } from '../lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://guasha-blog.vercel.app'; // เปลี่ยนเป็น domain จริง
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://namngam.com';
 
   // Get all blog posts
   const blogPosts = getAllBlogPosts();
@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 1,
     },
     {
@@ -26,6 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/admin`,
+      lastModified: new Date(),
+      changeFrequency: 'never',
+      priority: 0.1,
     },
     {
       url: `${baseUrl}/blog`,

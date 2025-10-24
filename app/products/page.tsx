@@ -8,6 +8,7 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import { useLocale } from '../contexts/LocaleContext';
+import { useTranslations, getLocalizedField } from '@/lib/translations';
 
 interface Product {
   id: string;
@@ -21,6 +22,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
+  const { t, locale } = useTranslations();
   const ref = useRef(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -141,10 +143,10 @@ export default function ProductsPage() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-                ສິນຄ້າແລະບລິການ
+                {t('products.title')}
               </h1>
               <p className="text-xl text-rococo-700 max-w-3xl mx-auto">
-                ຄັດສະຫຼັດເຄື່ອງມືກັວຊາຄຸນະພາບສູງ ແລະຜະລິດຕະພັນດູແລຜິວໜ້າທຳມະຊາດ
+                {t('products.subtitle')}
               </p>
             </motion.div>
           </div>
@@ -155,7 +157,12 @@ export default function ProductsPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayProducts.map((product) => {
-                const localizedProduct = getLocalizedProduct(product);
+                const localizedProduct = {
+                  displayName: getLocalizedField(product, 'name', locale),
+                  displayDescription: getLocalizedField(product, 'description', locale),
+                  displayFeatures: product.features,
+                  displayBenefits: product.benefits,
+                };
                 return (
                 <div
                   key={product.id}
@@ -173,13 +180,13 @@ export default function ProductsPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-pink-100">
-                        <p className="text-pink-600 font-bold">ບໍ່ມີຮູບ</p>
+                        <p className="text-pink-600 font-bold">{t('products.noImage')}</p>
                       </div>
                     )}
                     <div className="absolute top-2 right-2">
                       <div className="bg-yellow-400 px-3 py-1 rounded-full shadow-md">
                         <Star className="w-4 h-4 fill-white text-white inline" />
-                        <span className="font-semibold text-gray-900 text-xs ml-1">Premium</span>
+                        <span className="font-semibold text-gray-900 text-xs ml-1">{t('products.premium')}</span>
                       </div>
                     </div>
                   </div>
@@ -225,9 +232,9 @@ export default function ProductsPage() {
                     {/* Price & CTA */}
                     <div className="pt-3 border-t border-pink-200">
                       <div className="mb-2">
-                        <p className="text-xs text-gray-500">ລາຄາ</p>
+                        <p className="text-xs text-gray-500">{t('products.price')}</p>
                         <p className="text-2xl font-bold text-pink-600">
-                          {product.price || 'ສອບຖາມລາຄາ'}
+                          {product.price || t('products.priceInquiry')}
                         </p>
                       </div>
                       <a
@@ -237,7 +244,7 @@ export default function ProductsPage() {
                         className="w-full block text-center px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
                       >
                         <Heart className="w-4 h-4" />
-                        <span>ສົນທະນາ</span>
+                        <span>{t('products.chat')}</span>
                       </a>
                     </div>
                   </div>
@@ -252,7 +259,7 @@ export default function ProductsPage() {
         <section className="py-16 px-4 bg-gradient-to-br from-pink-50 via-rococo-50 to-pink-50">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-12 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-              ເປັນຫຍັງຕ້ອງເລືອກ NAMNGAM?
+              {t('products.whyChooseUs')}
             </h2>
 
             <div className="grid md:grid-cols-3 gap-8">
@@ -267,10 +274,10 @@ export default function ProductsPage() {
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-rococo-900 mb-2">
-                  ຄຸນະພາບສູງ
+                  {t('products.quality')}
                 </h3>
                 <p className="text-rococo-700">
-                  ຄັດເລືອກວັດຖຸດິບທຳມະຊາດແທ້ 100%
+                  {t('products.qualityDesc')}
                 </p>
               </motion.div>
 
@@ -285,10 +292,10 @@ export default function ProductsPage() {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-rococo-900 mb-2">
-                  ບລິການດີເລີດ
+                  {t('products.service')}
                 </h3>
                 <p className="text-rococo-700">
-                  ໃຫ້ຄຳປຶກສາແລະຊ່ວຍເທາທຸກຂັ້ນຕອນ
+                  {t('products.serviceDesc')}
                 </p>
               </motion.div>
 
@@ -303,10 +310,10 @@ export default function ProductsPage() {
                   <Check className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-rococo-900 mb-2">
-                  ຮັບປະກັນຄວາມພໍໃຈ
+                  {t('products.guarantee')}
                 </h3>
                 <p className="text-rococo-700">
-                  ສາມາດປ່ຽນ-ຄືນສີນຄ້າໄດ້ພາຍໃນ 7 ວັນ
+                  {t('products.guaranteeDesc')}
                 </p>
               </motion.div>
             </div>
@@ -317,10 +324,10 @@ export default function ProductsPage() {
         <section className="py-16 px-4 bg-gradient-to-br from-pink-600 to-rococo-600">
           <div className="max-w-4xl mx-auto text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              ພ້ອມເລີ່ມຕົ້ນແລ້ວບໍ?
+              {t('products.ready')}
             </h2>
             <p className="text-xl mb-8 opacity-90">
-              ຕິດຕໍ່ພວກເຮົາເພື່ອຂໍຄຳແນະນຳແລະສັ່ງຊື້ສິນຄ້າ
+              {t('products.readySubtitle')}
             </p>
             <a
               href="https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈສິນຄ້າກັວຊາ"
@@ -328,7 +335,7 @@ export default function ProductsPage() {
               rel="noopener noreferrer"
               className="inline-block px-8 py-4 bg-white text-pink-600 rounded-full font-bold text-lg hover:shadow-2xl transition-shadow"
             >
-              ສົນທະນາກັບພວກເຮົາ
+              {t('products.chatWithUs')}
             </a>
           </div>
         </section>
