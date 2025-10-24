@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Calendar, ArrowRight, Clock } from 'lucide-react';
 import Image from 'next/image';
 import BlogModal from './BlogModal';
+import { useTranslations } from '@/lib/translations';
 
 interface BlogPost {
   id?: number;
@@ -20,6 +21,7 @@ interface BlogPost {
 }
 
 export default function BlogPreview() {
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -98,10 +100,10 @@ export default function BlogPreview() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-            ບົດຄວາມແລະຄູ່ມື
+            {t('blog.title')}
           </h2>
           <p className="text-lg text-rococo-700">
-            ເລີ່ມຕົ້ນການເດີນທາງສູ່ຄວາມງາມແບບທຳມະຊາດກັບພວກເຮົາ
+            {t('blog.subtitle')}
           </p>
         </motion.div>
 
@@ -151,7 +153,7 @@ export default function BlogPreview() {
                   </p>
 
                   <div className="flex items-center gap-2 text-pink-600 font-medium group-hover:gap-4 transition-all">
-                    <span>ອ່ານຕໍ່</span>
+                    <span>{t('blog.readMore')}</span>
                     <ArrowRight size={20} />
                   </div>
                 </div>
@@ -167,7 +169,7 @@ export default function BlogPreview() {
         >
           <Link href="/blog">
             <button className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full font-medium text-lg hover:shadow-xl transition-shadow">
-              ເບິ່ງບົດຄວາມທັງໝົດ
+              {t('blog.viewAll')}
             </button>
           </Link>
         </motion.div>

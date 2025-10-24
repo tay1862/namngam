@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslations } from '@/lib/translations';
 
 export default function WhatsAppButton() {
+  const { t } = useTranslations();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export default function WhatsAppButton() {
 
           {/* Tooltip */}
           <div className="absolute right-16 top-1/2 -translate-y-1/2 bg-rococo-900 text-white px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-            <span className="text-sm font-medium">ສົນທະນາກັບພວກເຮົາ</span>
+            <span className="text-sm font-medium">{t('whatsapp.tooltip')}</span>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 rotate-45 w-2 h-2 bg-rococo-900" />
           </div>
         </motion.button>

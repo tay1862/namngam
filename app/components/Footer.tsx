@@ -28,8 +28,7 @@ export default function Footer() {
               </h3>
             </div>
             <p className="text-rococo-700 mb-6 leading-relaxed">
-              ຄູ່ມືການນວດກັວຊາແບບດັ້ງເດີມ ເພື່ອສຸຂະພາບແລະຄວາມງາມທາງດ້ານຜິວໜ້າ 
-              ດ້ວຍວິທີທຳມະຊາດທີ່ປອດໄພ
+              {t('footer.description')}
             </p>
             <div className="flex gap-4">
               <motion.a
@@ -60,17 +59,17 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <a href="#about" className="text-rococo-700 hover:text-pink-600 transition-colors">
-                  ກ່ຽວກັບ
+                  {t('nav.about')}
                 </a>
               </li>
               <li>
                 <a href="#benefits" className="text-rococo-700 hover:text-pink-600 transition-colors">
-                  ຜົນປະໂຫຍດ
+                  {t('benefits.title')}
                 </a>
               </li>
               <li>
                 <a href="#blog" className="text-rococo-700 hover:text-pink-600 transition-colors">
-                  ບົດຄວາມ
+                  {t('nav.blog')}
                 </a>
               </li>
               <li>
@@ -83,7 +82,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-lg font-bold text-rococo-900 mb-4">ຕິດຕໍ່</h4>
+            <h4 className="text-lg font-bold text-rococo-900 mb-4">{t('footer.contact')}</h4>
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-rococo-700">
                 <Mail size={16} />
@@ -104,13 +103,13 @@ export default function Footer() {
         {/* Bottom */}
         <div className="border-t border-rococo-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-rococo-600 text-center md:text-left">
-            © {currentYear} NAMNGAM. ສະຫງວນລິຂະສິດທັງໝົດ.
+            © {currentYear} NAMNGAM. {t('footer.copyright')}.
           </p>
           
           <div className="flex items-center gap-2 text-rococo-600">
-            <span>ສ້າງດ້ວຍ</span>
+            <span>{t('footer.madeWith')}</span>
             <Heart size={16} className="text-pink-500 fill-pink-500" />
-            <span>ໃນ ສປປ ລາວ</span>
+            <span>{t('footer.inLaos')}</span>
           </div>
         </div>
       </div>

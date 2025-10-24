@@ -7,23 +7,26 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, Search, ArrowRight } from 'lucide-react';
 import type { BlogPost } from '../../lib/blog';
+import { useTranslations } from '@/lib/translations';
 
 export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('ທັງໝົດ');
+  const [selectedCategory, setSelectedCategory] = useState(t('blog.allCategories'));
 
   // Filter posts
+  const allCategoriesText = t('blog.allCategories');
   const filteredPosts = posts.filter((post) => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'ທັງໝົດ' || post.category === selectedCategory;
+    const matchesCategory = selectedCategory === allCategoriesText || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   // Get unique categories
-  const categories = ['ທັງໝົດ', ...Array.from(new Set(posts.map((post) => post.category)))];
+  const categories = [allCategoriesText, ...Array.from(new Set(posts.map((post) => post.category)))];
 
   return (
     <>
@@ -38,10 +41,10 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
-              ບົດຄວາມແລະຄູ່ມື
+              {t('blog.title')}
             </h1>
             <p className="text-xl text-rococo-700 max-w-3xl mx-auto mb-8">
-              ຄຳແນະນຳ, ເຄັດລັບ, ແລະ ຄູ່ມືການນວດກັວຊາເພື່ອຄວາມງາມທີ່ຍືນຍົງ
+              {t('blog.fullSubtitle')}
             </p>
 
             {/* Search Bar */}
@@ -49,7 +52,7 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-rococo-400" />
               <input
                 type="text"
-                placeholder="ຄົ້ນຫາບົດຄວາມ..."
+                placeholder={t('blog.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 rounded-full border-2 border-pink-200 focus:border-pink-500 focus:outline-none transition-colors text-rococo-900 placeholder:text-rococo-400"
@@ -85,8 +88,8 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
         <div className="max-w-6xl mx-auto">
           {filteredPosts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-2xl text-rococo-600">ບໍ່ພົບບົດຄວາມທີ່ຄົ້ນຫາ</p>
-              <p className="text-rococo-500 mt-2">ລອງຄົ້ນຫາດ້ວຍຄຳອື່ນ ຫຼື ເລືອກໝວດໝູ່ອື່ນ</p>
+              <p className="text-2xl text-rococo-600">{t('blog.noResults')}</p>
+              <p className="text-rococo-500 mt-2">{t('blog.tryDifferent')}</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -137,7 +140,7 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
                         </p>
 
                         <div className="flex items-center gap-2 text-pink-600 font-medium group-hover:gap-4 transition-all">
-                          <span>ອ່ານຕໍ່</span>
+                          <span>{t('blog.readMore')}</span>
                           <ArrowRight size={20} />
                         </div>
                       </div>
@@ -154,16 +157,16 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
       <section className="py-16 px-4 bg-gradient-to-br from-pink-600 to-rococo-600">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            ສົນໃຈເລີ່ມຕົ້ນນວດກັວຊາ?
+            {t('blog.cta')}
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            ຕິດຕໍ່ພວກເຮົາເພື່ອຂໍຄຳແນະນຳແລະສັ່ງຊື້ສິນຄ້າ
+            {t('blog.ctaSubtitle')}
           </p>
           <Link
             href="/products"
             className="inline-block px-8 py-4 bg-white text-pink-600 rounded-full font-bold text-lg hover:shadow-2xl transition-shadow"
           >
-            ເບິ່ງສິນຄ້າ
+            {t('blog.viewProducts')}
           </Link>
         </div>
       </section>
