@@ -36,6 +36,7 @@ export default function MultiLanguageTabs({
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => setActiveTab(tab.id)}
             className={`relative px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === tab.id

@@ -63,6 +63,13 @@ export default function BenefitsManagementPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent duplicate submissions
+    if (loading) {
+      console.log('Already submitting...');
+      return;
+    }
+    
     setLoading(true);
 
     try {
