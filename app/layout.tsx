@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_Lao } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "./components/GoogleAnalytics";
+import FacebookPixel from "./components/FacebookPixel";
 import { Providers } from "./providers";
 
 const notoSansLao = Noto_Sans_Lao({
@@ -110,10 +111,16 @@ export default function RootLayout({
   return (
     <html lang="lo">
       <body className={`${notoSansLao.variable} antialiased`}>
-        {/* Google Analytics - ใส่ Measurement ID ของลูกค้า */}
+        {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
+        
+        {/* Facebook Pixel */}
+        {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
+          <FacebookPixel pixelId={process.env.NEXT_PUBLIC_FB_PIXEL_ID} />
+        )}
+        
         <Providers>{children}</Providers>
       </body>
     </html>
