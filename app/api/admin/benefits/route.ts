@@ -27,8 +27,13 @@ export async function POST(request: NextRequest) {
     const benefit = await prisma.benefitItem.create({
       data: {
         title: data.title,
+        titleTh: data.titleTh,
         titleEn: data.titleEn,
+        titleZh: data.titleZh,
         description: data.description,
+        descriptionTh: data.descriptionTh,
+        descriptionEn: data.descriptionEn,
+        descriptionZh: data.descriptionZh,
         icon: data.icon,
         image: data.image,
         published: data.published ?? true,

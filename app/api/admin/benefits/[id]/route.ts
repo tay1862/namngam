@@ -20,8 +20,13 @@ export async function PUT(
       where: { id: params.id },
       data: {
         title: data.title,
+        titleTh: data.titleTh,
         titleEn: data.titleEn,
+        titleZh: data.titleZh,
         description: data.description,
+        descriptionTh: data.descriptionTh,
+        descriptionEn: data.descriptionEn,
+        descriptionZh: data.descriptionZh,
         icon: data.icon,
         image: data.image,
         published: data.published,

@@ -29,6 +29,10 @@ export function useFetch<T>(
         
         const res = await fetch(url, {
           signal: abortController.signal,
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
         });
 
         if (!res.ok) {

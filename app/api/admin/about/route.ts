@@ -27,10 +27,17 @@ export async function POST(request: NextRequest) {
     const section = await prisma.aboutSection.create({
       data: {
         title: data.title,
+        titleTh: data.titleTh,
         titleEn: data.titleEn,
+        titleZh: data.titleZh,
         description: data.description,
+        descriptionTh: data.descriptionTh,
+        descriptionEn: data.descriptionEn,
+        descriptionZh: data.descriptionZh,
         image: data.image,
+        backgroundType: data.backgroundType,
         backgroundImage: data.backgroundImage,
+        backgroundColor: data.backgroundColor,
         videoUrl: data.videoUrl,
         published: data.published ?? true,
         order: data.order ?? 0,
