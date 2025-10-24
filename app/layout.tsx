@@ -98,7 +98,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-site-verification-code", // เพิ่ม Google Search Console verification
+    google: "KvTYevRB510KBEMrR3rUwOL_CYP1AhDrRfJ1wAIpipM",
   },
   category: "beauty",
 };
