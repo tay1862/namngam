@@ -486,3 +486,38 @@ export function localizeFAQ(faq: any, locale: string) {
     displayAnswer: getLocalizedField(faq, 'answer', locale),
   };
 }
+
+// Helper to localize About Section
+export function localizeAboutSection(about: any, locale: string) {
+  if (!about) return null;
+  
+  return {
+    ...about,
+    displayTitle: getLocalizedField(about, 'title', locale),
+    displayDescription: getLocalizedField(about, 'description', locale),
+  };
+}
+
+// Helper to localize Benefit Item
+export function localizeBenefitItem(benefit: any, locale: string) {
+  if (!benefit) return null;
+  
+  return {
+    ...benefit,
+    displayTitle: getLocalizedField(benefit, 'title', locale),
+    displayDescription: getLocalizedField(benefit, 'description', locale),
+  };
+}
+
+// Helper to localize Hero Section
+export function localizeHeroSection(hero: any, locale: string) {
+  if (!hero) return null;
+  
+  return {
+    ...hero,
+    displayTitle: getLocalizedField(hero, 'title', locale),
+    displaySubtitle: getLocalizedField(hero, 'subtitle', locale),
+    displayDescription: getLocalizedField(hero, 'description', locale),
+    displayCtaText: getLocalizedField(hero, 'ctaText', locale),
+  };
+}

@@ -208,9 +208,19 @@ model Subscriber {
 // About Section
 model AboutSection {
   id              String   @id @default(cuid())
-  title           String
-  titleEn         String?
-  description     String   @db.Text
+  
+  // Multi-language title
+  title           String   // Lao (default)
+  titleTh         String?  // Thai
+  titleEn         String?  // English
+  titleZh         String?  // Chinese
+  
+  // Multi-language description
+  description     String   @db.Text  // Lao (default)
+  descriptionTh   String?  @db.Text  // Thai
+  descriptionEn   String?  @db.Text  // English
+  descriptionZh   String?  @db.Text  // Chinese
+  
   image           String?
   backgroundType  String   @default("image") // image, gradient, solid
   backgroundImage String?
@@ -227,9 +237,19 @@ model AboutSection {
 // Benefit Items
 model BenefitItem {
   id          String   @id @default(cuid())
-  title       String
-  titleEn     String?
-  description String   @db.Text
+  
+  // Multi-language title
+  title       String   // Lao (default)
+  titleTh     String?  // Thai
+  titleEn     String?  // English
+  titleZh     String?  // Chinese
+  
+  // Multi-language description
+  description String   @db.Text  // Lao (default)
+  descriptionTh String? @db.Text  // Thai
+  descriptionEn String? @db.Text  // English
+  descriptionZh String? @db.Text  // Chinese
+  
   icon        String?
   image       String?
   published   Boolean  @default(true)
@@ -254,10 +274,31 @@ model SectionBackground {
 // Hero Section
 model HeroSection {
   id              String   @id @default(cuid())
-  title           String
-  subtitle        String?
-  description     String?  @db.Text
-  ctaText         String?
+  
+  // Multi-language title
+  title           String   // Lao (default)
+  titleTh         String?  // Thai
+  titleEn         String?  // English
+  titleZh         String?  // Chinese
+  
+  // Multi-language subtitle
+  subtitle        String?  // Lao (default)
+  subtitleTh      String?  // Thai
+  subtitleEn      String?  // English
+  subtitleZh      String?  // Chinese
+  
+  // Multi-language description
+  description     String?  @db.Text  // Lao (default)
+  descriptionTh   String?  @db.Text  // Thai
+  descriptionEn   String?  @db.Text  // English
+  descriptionZh   String?  @db.Text  // Chinese
+  
+  // Multi-language CTA text
+  ctaText         String?  // Lao (default)
+  ctaTextTh       String?  // Thai
+  ctaTextEn       String?  // English
+  ctaTextZh       String?  // Chinese
+  
   ctaLink         String?
   backgroundImage String?
   logoWatermark   Boolean  @default(true)
