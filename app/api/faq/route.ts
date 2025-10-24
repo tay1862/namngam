@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getCachedFAQs } from '@/lib/cache';
 
 export async function GET() {
   try {
-    const faqs = await prisma.fAQ.findMany({
-      where: { published: true },
-      orderBy: { order: 'asc' },
-    });
-
+    const faqs = await getCachedFAQs();
     return NextResponse.json(faqs);
   } catch (error) {
     console.error('Error fetching FAQs:', error);

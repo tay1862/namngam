@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { slugify } from '@/lib/utils';
+import { revalidateByTag } from '@/lib/cache';
 
 // GET single post
 export async function GET(
@@ -80,6 +81,9 @@ export async function PUT(
       },
     });
 
+    // Revalidate blog cache
+    await revalidateByTag('blog');
+
     return NextResponse.json(post);
   } catch (error) {
     console.error('Error updating post:', error);
@@ -102,6 +106,9 @@ export async function DELETE(
     await prisma.blogPost.delete({
       where: { id: params.id },
     });
+
+    // Revalidate blog cache
+    await revalidateByTag('blog');
 
     return NextResponse.json({ success: true });
   } catch (error) {

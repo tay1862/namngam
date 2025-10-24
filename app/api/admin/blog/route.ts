@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { slugify } from '@/lib/utils';
+import { revalidateByTag } from '@/lib/cache';
 
 // GET all blog posts
 export async function GET() {
@@ -60,6 +61,9 @@ export async function POST(request: NextRequest) {
         publishedAt: data.published ? new Date() : null,
       },
     });
+
+    // Revalidate blog cache
+    await revalidateByTag('blog');
 
     return NextResponse.json(post, { status: 201 });
   } catch (error) {

@@ -94,6 +94,10 @@ model Product {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  @@index([inStock, order])
+  @@index([featured])
+  @@index([category])
 }
 
 // Blog Posts
@@ -130,6 +134,10 @@ model BlogPost {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   publishedAt DateTime?
+  
+  @@index([published, publishedAt])
+  @@index([category])
+  @@index([slug])
 }
 
 // FAQ
@@ -152,6 +160,9 @@ model FAQ {
   published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@index([published, order])
+  @@index([category])
 }
 
 // Site Settings
@@ -189,6 +200,9 @@ model Subscriber {
   source    String   @default("website")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@index([status])
+  @@index([createdAt])
 }
 
 // About Section
@@ -206,6 +220,8 @@ model AboutSection {
   order           Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  
+  @@index([published, order])
 }
 
 // Benefit Items
@@ -220,6 +236,8 @@ model BenefitItem {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  @@index([published, order])
 }
 
 // Section Backgrounds (for Benefits, FAQ, etc.)

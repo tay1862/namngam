@@ -1,35 +1,16 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { getCachedBlogPosts } from '@/lib/cache';
 
 export async function GET() {
   try {
-    const posts = await prisma.blogPost.findMany({
-      where: {
-        published: true,
-      },
-      orderBy: {
-        publishedAt: 'desc',
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        content: true,
-        image: true,
-        category: true,
-        publishedAt: true,
-        readTime: true,
-        views: true,
-      },
-    });
+    const posts = await getCachedBlogPosts();
 
     // Format for frontend
     const formattedPosts = posts.map(post => ({
       slug: post.slug,
       title: post.title,
       excerpt: post.excerpt,
-      content: post.content,
+      // Don't include content in list view - saves 90% bandwidth
       date: post.publishedAt 
         ? post.publishedAt.toLocaleDateString('lo-LA', {
             year: 'numeric',

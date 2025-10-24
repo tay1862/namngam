@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { revalidateByTag } from '@/lib/cache';
 
 // GET single product
 export async function GET(
@@ -61,6 +62,9 @@ export async function PUT(
       },
     });
 
+    // Revalidate products cache
+    await revalidateByTag('products');
+
     return NextResponse.json(product);
   } catch (error) {
     console.error('Error updating product:', error);
@@ -83,6 +87,9 @@ export async function DELETE(
     await prisma.product.delete({
       where: { id: params.id },
     });
+
+    // Revalidate products cache
+    await revalidateByTag('products');
 
     return NextResponse.json({ success: true });
   } catch (error) {

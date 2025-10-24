@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { revalidateByTag } from '@/lib/cache';
 
 export async function PUT(
   request: NextRequest,
@@ -27,6 +28,9 @@ export async function PUT(
       },
     });
 
+    // Revalidate FAQs cache
+    await revalidateByTag('faqs');
+
     return NextResponse.json(faq);
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -47,6 +51,9 @@ export async function DELETE(
     await prisma.fAQ.delete({
       where: { id: params.id },
     });
+
+    // Revalidate FAQs cache
+    await revalidateByTag('faqs');
 
     return NextResponse.json({ success: true });
   } catch (error) {
