@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sparkles, Save, Trash2 } from 'lucide-react';
+import { Sparkles, Save, Trash2, Languages } from 'lucide-react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import MultiLanguageTabs, { MultiLanguageInput, Language } from '@/app/components/MultiLanguageTabs';
@@ -27,6 +27,7 @@ export default function BenefitsManagementPage() {
   const [benefits, setBenefits] = useState<BenefitItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [translating, setTranslating] = useState(false);
 
   const [formData, setFormData] = useState<Partial<BenefitItem>>({
     title: '',
@@ -108,6 +109,73 @@ export default function BenefitsManagementPage() {
     }
   };
 
+  const handleAutoTranslate = async () => {
+    if (!formData.title || !formData.description) {
+      toast.error('ກະລຸນາກຣອກຂໍ້ມູນພາສາລາວກ່ອນ');
+      return;
+    }
+
+    setTranslating(true);
+    const toastId = toast.loading('ກຳລັງແປນພາສາອັດຕະໂນມັດ...');
+
+    try {
+      const [titleTh, titleEn, titleZh, descTh, descEn, descZh] = await Promise.all([
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: formData.title, targetLang: 'th' }),
+        }).then(r => r.json()).then(d => d.translatedText),
+        
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: formData.title, targetLang: 'en' }),
+        }).then(r => r.json()).then(d => d.translatedText),
+        
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: formData.title, targetLang: 'zh' }),
+        }).then(r => r.json()).then(d => d.translatedText),
+        
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: formData.description, targetLang: 'th' }),
+        }).then(r => r.json()).then(d => d.translatedText),
+        
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: formData.description, targetLang: 'en' }),
+        }).then(r => r.json()).then(d => d.translatedText),
+        
+        fetch('/api/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: formData.description, targetLang: 'zh' }),
+        }).then(r => r.json()).then(d => d.translatedText),
+      ]);
+
+      setFormData({
+        ...formData,
+        titleTh,
+        titleEn,
+        titleZh,
+        descriptionTh: descTh,
+        descriptionEn: descEn,
+        descriptionZh: descZh,
+      });
+
+      toast.success('ແປນສຳເລັດ! ກະລຸນາກວດສອບແລະແກ້ໄຂຖ້າຈຳເປັນ', { id: toastId });
+    } catch (error) {
+      console.error('Translation error:', error);
+      toast.error('ແປນລົ້ມເຫລວ', { id: toastId });
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -149,6 +217,19 @@ export default function BenefitsManagementPage() {
       <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           
+          {/* Auto-Translate Button */}
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={handleAutoTranslate}
+              disabled={translating || !formData.title}
+              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 font-medium flex items-center gap-2"
+            >
+              <Languages className="w-5 h-5" />
+              {translating ? 'ກຳລັງແປນ...' : '🪄 ແປນອັດຕະໂນມັດ (ທຸກພາສາ)'}
+            </button>
+          </div>
+
           {/* Multi-Language Tabs */}
           <MultiLanguageTabs>
             {(activeTab: Language) => (
