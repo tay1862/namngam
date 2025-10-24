@@ -1,14 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Info, Save, Upload, Trash2 } from 'lucide-react';
+import { Info, Save, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
+import MultiLanguageTabs, { MultiLanguageInput, Language } from '@/app/components/MultiLanguageTabs';
+import ImageUpload from '@/app/components/ImageUpload';
 
 interface AboutSection {
   id: string;
   title: string;
+  titleTh?: string;
   titleEn?: string;
+  titleZh?: string;
   description: string;
+  descriptionTh?: string;
+  descriptionEn?: string;
+  descriptionZh?: string;
   image?: string;
   backgroundType?: string;
   backgroundImage?: string;
@@ -22,7 +30,24 @@ export default function AboutManagementPage() {
   const [sections, setSections] = useState<AboutSection[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+
+  const [formData, setFormData] = useState<Partial<AboutSection>>({
+    title: '',
+    titleTh: '',
+    titleEn: '',
+    titleZh: '',
+    description: '',
+    descriptionTh: '',
+    descriptionEn: '',
+    descriptionZh: '',
+    image: '',
+    backgroundType: 'image',
+    backgroundImage: '',
+    backgroundColor: '#fdf2f8',
+    videoUrl: '',
+    published: true,
+    order: 0,
+  });
 
   useEffect(() => {
     fetchSections();
@@ -35,49 +60,11 @@ export default function AboutManagementPage() {
       setSections(data);
     } catch (error) {
       console.error('Error fetching sections:', error);
+      toast.error('ໂຫຼດຂໍ້ມູນລົ້ມເຫລວ');
     } finally {
       setLoading(false);
     }
   };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'image' | 'backgroundImage') => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      
-      if (data.url) {
-        setFormData(prev => ({ ...prev, [field]: data.url }));
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('ອັບໂຫຼດຮູບລົ້ມເຫລວ');
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const [formData, setFormData] = useState<Partial<AboutSection>>({
-    title: '',
-    titleEn: '',
-    description: '',
-    image: '',
-    backgroundType: 'image',
-    backgroundImage: '',
-    backgroundColor: '#fdf2f8',
-    videoUrl: '',
-    published: true,
-    order: 0,
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,11 +81,15 @@ export default function AboutManagementPage() {
       });
 
       if (res.ok) {
+        toast.success(editingId ? 'ອັບເດດສຳເລັດ' : 'ເພີ່ມສຳເລັດ');
         await fetchSections();
         resetForm();
+      } else {
+        toast.error('ລົ້ມເຫລວ');
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('ເກີດຂໍ້ຜິດພາດ');
     } finally {
       setLoading(false);
     }
@@ -107,6 +98,7 @@ export default function AboutManagementPage() {
   const handleEdit = (section: AboutSection) => {
     setFormData(section);
     setEditingId(section.id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id: string) => {
@@ -114,17 +106,24 @@ export default function AboutManagementPage() {
 
     try {
       await fetch(`/api/admin/about/${id}`, { method: 'DELETE' });
+      toast.success('ລຶບສຳເລັດ');
       await fetchSections();
     } catch (error) {
       console.error('Error:', error);
+      toast.error('ລຶບລົ້ມເຫລວ');
     }
   };
 
   const resetForm = () => {
     setFormData({
       title: '',
+      titleTh: '',
       titleEn: '',
+      titleZh: '',
       description: '',
+      descriptionTh: '',
+      descriptionEn: '',
+      descriptionZh: '',
       image: '',
       backgroundType: 'image',
       backgroundImage: '',
@@ -142,6 +141,7 @@ export default function AboutManagementPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl">
@@ -149,141 +149,118 @@ export default function AboutManagementPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">ຈັດການໜ້າກ່ຽວກັບ (About)</h1>
-            <p className="text-gray-400 text-sm">ແກ້ໄຂເນື້ອຫາໜ້າກ່ຽວກັບເຮົາ</p>
+            <p className="text-gray-400 text-sm">ແກ້ໄຂເນື້ອຫາໜ້າກ່ຽວກັບເຮົາ - 4 ພາສາ</p>
           </div>
         </div>
       </div>
 
       {/* Form */}
       <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                ຫົວຂໍ້ (ລາວ) *
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                ຫົວຂໍ້ (English)
-              </label>
-              <input
-                type="text"
-                value={formData.titleEn || ''}
-                onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ເນື້ອຫາ *
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={6}
-              className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
-              required
-            />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Main Image Upload */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                ຮູບພາບຫຼັກ
-              </label>
-              <div className="space-y-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, 'image')}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white"
-                  disabled={uploading}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          
+          {/* Multi-Language Tabs */}
+          <MultiLanguageTabs>
+            {(activeTab: Language) => (
+              <div className="space-y-4">
+                <MultiLanguageInput
+                  label="ຫົວຂໍ້"
+                  baseId="title"
+                  currentLang={activeTab}
+                  value={
+                    activeTab === 'lo' ? formData.title || '' :
+                    activeTab === 'th' ? formData.titleTh || '' :
+                    activeTab === 'en' ? formData.titleEn || '' :
+                    formData.titleZh || ''
+                  }
+                  onChange={(value) => {
+                    if (activeTab === 'lo') setFormData({ ...formData, title: value });
+                    else if (activeTab === 'th') setFormData({ ...formData, titleTh: value });
+                    else if (activeTab === 'en') setFormData({ ...formData, titleEn: value });
+                    else setFormData({ ...formData, titleZh: value });
+                  }}
+                  required
+                  type="text"
                 />
-                {formData.image && (
-                  <div className="relative w-full h-32">
-                    <Image
-                      src={formData.image}
-                      alt="Preview"
-                      fill
-                      className="object-cover rounded-lg"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
 
-            {/* Background Settings */}
+                <MultiLanguageInput
+                  label="ເນື້ອຫາ"
+                  baseId="description"
+                  currentLang={activeTab}
+                  value={
+                    activeTab === 'lo' ? formData.description || '' :
+                    activeTab === 'th' ? formData.descriptionTh || '' :
+                    activeTab === 'en' ? formData.descriptionEn || '' :
+                    formData.descriptionZh || ''
+                  }
+                  onChange={(value) => {
+                    if (activeTab === 'lo') setFormData({ ...formData, description: value });
+                    else if (activeTab === 'th') setFormData({ ...formData, descriptionTh: value });
+                    else if (activeTab === 'en') setFormData({ ...formData, descriptionEn: value });
+                    else setFormData({ ...formData, descriptionZh: value });
+                  }}
+                  required
+                  type="textarea"
+                  rows={6}
+                />
+              </div>
+            )}
+          </MultiLanguageTabs>
+
+          {/* Images */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <ImageUpload
+              label="ຮູບພາບຫຼັກ"
+              value={formData.image}
+              onChange={(url) => setFormData({ ...formData, image: url })}
+              aspectRatio="video"
+            />
+
+            {formData.backgroundType === 'image' && (
+              <ImageUpload
+                label="ຮູບພາບພື້ນຫຼັງ"
+                value={formData.backgroundImage}
+                onChange={(url) => setFormData({ ...formData, backgroundImage: url })}
+                aspectRatio="video"
+              />
+            )}
+          </div>
+
+          {/* Background Settings */}
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 ປະເພດພື້ນຫຼັງ
               </label>
-              <div className="space-y-2">
-                <select
-                  value={formData.backgroundType}
-                  onChange={(e) => setFormData({ ...formData, backgroundType: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
-                >
-                  <option value="image">ຮູບພາບ</option>
-                  <option value="gradient">ສີເກຣດຽນ</option>
-                  <option value="solid">ສີທຶບ</option>
-                </select>
-                
-                {formData.backgroundType === 'image' && (
-                  <>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload(e, 'backgroundImage')}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white"
-                      disabled={uploading}
-                    />
-                    {formData.backgroundImage && (
-                      <div className="relative w-full h-32">
-                        <Image
-                          src={formData.backgroundImage}
-                          alt="Background Preview"
-                          fill
-                          className="object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-                
-                {(formData.backgroundType === 'solid' || formData.backgroundType === 'gradient') && (
-                  <div>
-                    <label className="block text-xs text-gray-400 mb-1">
-                      {formData.backgroundType === 'gradient' 
-                        ? 'Tailwind Gradient Class (e.g., from-pink-50 via-white to-rococo-50)'
-                        : 'Hex Color (e.g., #fdf2f8)'}
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.backgroundColor || ''}
-                      onChange={(e) => setFormData({ ...formData, backgroundColor: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white text-sm"
-                      placeholder={formData.backgroundType === 'gradient' 
-                        ? 'from-pink-50 via-white to-rococo-50'
-                        : '#fdf2f8'}
-                    />
-                  </div>
-                )}
-              </div>
+              <select
+                value={formData.backgroundType}
+                onChange={(e) => setFormData({ ...formData, backgroundType: e.target.value })}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-amber-500"
+              >
+                <option value="image">ຮູບພາບ</option>
+                <option value="gradient">ສີເກຣດຽນ</option>
+                <option value="solid">ສີທຶບ</option>
+              </select>
             </div>
+
+            {(formData.backgroundType === 'solid' || formData.backgroundType === 'gradient') && (
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  {formData.backgroundType === 'gradient' ? 'Tailwind Gradient Class' : 'Hex Color'}
+                </label>
+                <input
+                  type="text"
+                  value={formData.backgroundColor || ''}
+                  onChange={(e) => setFormData({ ...formData, backgroundColor: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-amber-500"
+                  placeholder={formData.backgroundType === 'gradient' 
+                    ? 'from-pink-50 via-white to-rococo-50'
+                    : '#fdf2f8'}
+                />
+              </div>
+            )}
           </div>
 
+          {/* Other Fields */}
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -293,7 +270,7 @@ export default function AboutManagementPage() {
                 type="url"
                 value={formData.videoUrl || ''}
                 onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-amber-500"
                 placeholder="https://..."
               />
             </div>
@@ -305,8 +282,8 @@ export default function AboutManagementPage() {
               <input
                 type="number"
                 value={formData.order}
-                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white"
+                onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-amber-500"
               />
             </div>
 
@@ -316,18 +293,19 @@ export default function AboutManagementPage() {
                   type="checkbox"
                   checked={formData.published}
                   onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                  className="w-5 h-5 rounded border-gray-600 bg-gray-900/50"
+                  className="w-5 h-5 rounded border-gray-600 bg-gray-900/50 text-amber-500 focus:ring-amber-500"
                 />
                 <span className="text-gray-300">ເຜີຍແຜ່</span>
               </label>
             </div>
           </div>
 
+          {/* Submit Buttons */}
           <div className="flex gap-3">
             <button
               type="submit"
-              disabled={loading || uploading}
-              className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:shadow-lg transition-shadow disabled:opacity-50"
+              disabled={loading}
+              className="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 font-medium"
             >
               <Save className="w-5 h-5 inline mr-2" />
               {editingId ? 'ອັບເດດ' : 'ເພີ່ມໃໝ່'}
@@ -336,7 +314,7 @@ export default function AboutManagementPage() {
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+                className="px-6 py-3 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors"
               >
                 ຍົກເລີກ
               </button>
@@ -347,38 +325,60 @@ export default function AboutManagementPage() {
 
       {/* List */}
       <div className="space-y-4">
+        <h2 className="text-xl font-bold text-white">ລາຍການທັງໝົດ ({sections.length})</h2>
         {sections.map((section) => (
-          <div key={section.id} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
-            <div className="flex justify-between items-start">
+          <div key={section.id} className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-colors">
+            <div className="flex justify-between items-start gap-4">
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-white mb-2">{section.title}</h3>
-                {section.titleEn && (
-                  <p className="text-gray-400 text-sm mb-2">{section.titleEn}</p>
-                )}
-                <p className="text-gray-300 mb-4">{section.description.substring(0, 150)}...</p>
-                <div className="flex gap-4 items-center">
+                <div className="flex items-start gap-4 mb-4">
                   {section.image && (
-                    <div className="relative w-24 h-24">
+                    <div className="relative w-32 h-32 flex-shrink-0">
                       <Image src={section.image} alt="Main" fill className="object-cover rounded-lg" />
                     </div>
                   )}
-                  {section.backgroundImage && (
-                    <div className="relative w-24 h-24">
-                      <Image src={section.backgroundImage} alt="Background" fill className="object-cover rounded-lg" />
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-white mb-2">
+                      {section.title}
+                    </h3>
+                    <div className="space-y-1 text-sm">
+                      {section.titleTh && (
+                        <p className="text-gray-400">🇹🇭 {section.titleTh}</p>
+                      )}
+                      {section.titleEn && (
+                        <p className="text-gray-400">🇺🇸 {section.titleEn}</p>
+                      )}
+                      {section.titleZh && (
+                        <p className="text-gray-400">🇨🇳 {section.titleZh}</p>
+                      )}
                     </div>
-                  )}
+                    <p className="text-gray-300 mt-3 line-clamp-2">{section.description}</p>
+                    <div className="flex gap-2 mt-3 flex-wrap">
+                      <span className="px-2 py-1 bg-gray-700 rounded text-xs text-gray-300">
+                        Order: {section.order}
+                      </span>
+                      {section.published ? (
+                        <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                          ເຜີຍແຜ່
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 bg-gray-700 text-gray-400 rounded text-xs">
+                          ບໍ່ເຜີຍແຜ່
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-shrink-0">
                 <button
                   onClick={() => handleEdit(section)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   ແກ້ໄຂ
                 </button>
                 <button
                   onClick={() => handleDelete(section.id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
