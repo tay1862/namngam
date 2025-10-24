@@ -60,7 +60,7 @@ export default function AdminLoginPage() {
           <div className="text-center mb-8">
             <div className="w-20 h-20 mx-auto mb-4 relative">
               <Image
-                src="/Logo-namngam-white.png"
+                src="/Logo-namngam-gold.png"
                 alt="NAMNGAM"
                 fill
                 className="object-contain"

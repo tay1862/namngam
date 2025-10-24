@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { 
   LayoutDashboard, 
@@ -13,24 +14,29 @@ import {
   LogOut,
   Sparkles,
   Info,
-  Star
+  Star,
+  UserCog,
+  Mail
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { motion } from 'framer-motion';
+import { canManageUsers, canManageSettings } from '@/lib/rbac';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'ໜ້າຫຼັກ', href: '/admin/dashboard' },
-  { icon: Info, label: 'ກ່ຽວກັບເຮົາ', href: '/admin/about' },
-  { icon: Star, label: 'ຜົນປະໂຫຍດ', href: '/admin/benefits' },
-  { icon: Package, label: 'ຈັດການສິນຄ້າ', href: '/admin/products' },
-  { icon: FileText, label: 'ຈັດການບົດຄວາມ', href: '/admin/blog' },
-  { icon: HelpCircle, label: 'ຄຳຖາມທີ່ພົບເລື້ອຍ', href: '/admin/faq' },
-  { icon: Users, label: 'ຜູ້ສະໝັກຮັບຂ່າວສານ', href: '/admin/subscribers' },
-  { icon: Settings, label: 'ຕັ້ງຄ່າເວັບໄຊທ໌', href: '/admin/settings' },
+  { icon: LayoutDashboard, label: 'ໜ້າຫຼັກ', href: '/admin/dashboard', permission: null },
+  { icon: Info, label: 'ກ່ຽວກັບເຮົາ', href: '/admin/about', permission: null },
+  { icon: Star, label: 'ຜົນປະໂຫຍດ', href: '/admin/benefits', permission: null },
+  { icon: Package, label: 'ຈັດການສິນຄ້າ', href: '/admin/products', permission: null },
+  { icon: FileText, label: 'ຈັດການບົດຄວາມ', href: '/admin/blog', permission: null },
+  { icon: HelpCircle, label: 'ຄຳຖາມທີ່ພົບເລື້ອຍ', href: '/admin/faq', permission: null },
+  { icon: Mail, label: 'ຜູ້ສະໝັກຮັບຂ່າວສານ', href: '/admin/subscribers', permission: null },
+  { icon: UserCog, label: 'ຈັດການຜູ້ໃຊ້', href: '/admin/users', permission: 'manage_users' },
+  { icon: Settings, label: 'ຕັ້ງຄ່າເວັບໄຊທ໌', href: '/admin/settings', permission: 'manage_settings' },
 ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-gray-900/95 backdrop-blur-xl border-r border-amber-500/20 z-50 hidden lg:block">
@@ -40,7 +46,7 @@ export default function AdminSidebar() {
           <Link href="/admin/dashboard" className="flex items-center gap-3 group">
             <div className="w-12 h-12 relative">
               <Image
-              src="/Logo-namngam-white.png"
+                src="/Logo-namngam-gold.png"
                 alt="NAMNGAM"
                 fill
                 className="object-contain group-hover:scale-110 transition-transform"
@@ -59,6 +65,14 @@ export default function AdminSidebar() {
         <nav className="flex-1 p-4 overflow-y-auto">
           <div className="space-y-2">
             {menuItems.map((item) => {
+              // Check permission
+              if (item.permission === 'manage_users' && !canManageUsers(session?.user?.role)) {
+                return null;
+              }
+              if (item.permission === 'manage_settings' && !canManageSettings(session?.user?.role)) {
+                return null;
+              }
+
               const Icon = item.icon;
               const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
               
