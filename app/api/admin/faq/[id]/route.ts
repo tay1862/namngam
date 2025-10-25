@@ -21,7 +21,13 @@ export async function PUT(
       where: { id: params.id },
       data: {
         question: data.question,
+        questionTh: data.questionTh,
+        questionEn: data.questionEn,
+        questionZh: data.questionZh,
         answer: data.answer,
+        answerTh: data.answerTh,
+        answerEn: data.answerEn,
+        answerZh: data.answerZh,
         category: data.category,
         order: data.order,
         published: data.published,

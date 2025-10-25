@@ -33,7 +33,13 @@ export async function POST(request: NextRequest) {
     const faq = await prisma.fAQ.create({
       data: {
         question: data.question,
+        questionTh: data.questionTh || null,
+        questionEn: data.questionEn || null,
+        questionZh: data.questionZh || null,
         answer: data.answer,
+        answerTh: data.answerTh || null,
+        answerEn: data.answerEn || null,
+        answerZh: data.answerZh || null,
         category: data.category || 'ທົ່ວໄປ',
         order: data.order || 0,
         published: data.published !== false,

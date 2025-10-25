@@ -47,9 +47,18 @@ export async function POST(request: NextRequest) {
     const post = await prisma.blogPost.create({
       data: {
         title: data.title,
+        titleTh: data.titleTh || null,
+        titleEn: data.titleEn || null,
+        titleZh: data.titleZh || null,
         slug,
         excerpt: data.excerpt,
+        excerptTh: data.excerptTh || null,
+        excerptEn: data.excerptEn || null,
+        excerptZh: data.excerptZh || null,
         content: data.content,
+        contentTh: data.contentTh || null,
+        contentEn: data.contentEn || null,
+        contentZh: data.contentZh || null,
         image: data.image,
         category: data.category || 'ທົ່ວໄປ',
         published: data.published || false,
