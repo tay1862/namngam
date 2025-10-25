@@ -1,4 +1,6 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { notFound, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
@@ -7,56 +9,54 @@ import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
 import ShareButtons from '../../components/ShareButtons';
 import ReactMarkdown from 'react-markdown';
+import { useEffect, useState } from 'react';
+import { useTranslations, localizeBlogPost } from '@/lib/translations';
 
-export async function generateStaticParams() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/blog`, { cache: 'no-store' });
-    const posts: { slug: string }[] = await res.json();
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
-  } catch {
-    return [];
-  }
-}
+export default function BlogPostPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
+  const { locale } = useTranslations();
+  const [post, setPost] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/blog/${slug}`, { cache: 'no-store' });
-  const post = res.ok ? await res.json() : null;
-  
-  if (!post) {
-    return {
-      title: 'Blog Not Found - NAMNGAM',
+  useEffect(() => {
+    if (!slug) return;
+    
+    const fetchPost = async () => {
+      try {
+        const res = await fetch(`/api/blog/${slug}`, { cache: 'no-store' });
+        if (!res.ok) {
+          notFound();
+        }
+        const data = await res.json();
+        setPost(data);
+      } catch (error) {
+        console.error('Failed to fetch blog post:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchPost();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <div className="min-h-screen flex items-center justify-center pt-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent" />
+        </div>
+        <Footer />
+      </>
+    );
   }
 
-  return {
-    title: `${post.title} - NAMNGAM Blog`,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      images: [post.image],
-      type: 'article',
-      publishedTime: post.date,
-    },
-  };
-}
-
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  
-  const res = await fetch(`${baseUrl}/api/blog/${slug}`, { cache: 'no-store' });
-  
-  if (!res.ok) {
+  if (!post) {
     notFound();
   }
-  
-  const post = await res.json();
+
+  const localizedPost = localizeBlogPost(post, locale);
 
   return (
     <>
@@ -67,10 +67,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div className="relative h-[60vh] min-h-[400px] overflow-hidden">
           <Image
             src={post.image}
-            alt={post.title}
+            alt={localizedPost?.displayTitle || post.title}
             fill
             className="object-cover"
             priority
+            unoptimized={post.image?.startsWith('/uploads')}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
           
@@ -89,7 +90,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </span>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                {post.title}
+                {localizedPost?.displayTitle || post.title}
               </h1>
 
               <div className="flex items-center gap-6 text-white/80 text-sm">
@@ -112,7 +113,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="flex justify-end mb-8">
             <ShareButtons
               url={`https://guasha-blog.vercel.app/blog/${post.slug}`}
-              title={post.title}
+              title={localizedPost?.displayTitle || post.title}
             />
           </div>
 
@@ -166,7 +167,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 ),
               }}
             >
-              {post.content}
+              {localizedPost?.displayContent || post.content}
             </ReactMarkdown>
           </div>
 
@@ -175,7 +176,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <p className="text-lg font-semibold text-rococo-900 mb-4">ແບ່ງປັນບົດຄວາມນີ້:</p>
             <ShareButtons
               url={`https://guasha-blog.vercel.app/blog/${post.slug}`}
-              title={post.title}
+              title={localizedPost?.displayTitle || post.title}
             />
           </div>
         </div>

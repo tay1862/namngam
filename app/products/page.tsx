@@ -8,7 +8,7 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import { useLocale } from '../contexts/LocaleContext';
-import { useTranslations, getLocalizedField } from '@/lib/translations';
+import { useTranslations, localizeProduct } from '@/lib/translations';
 
 interface Product {
   id: string;
@@ -157,12 +157,8 @@ export default function ProductsPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayProducts.map((product) => {
-                const localizedProduct = {
-                  displayName: getLocalizedField(product, 'name', locale),
-                  displayDescription: getLocalizedField(product, 'description', locale),
-                  displayFeatures: product.features,
-                  displayBenefits: product.benefits,
-                };
+                const localizedProduct = localizeProduct(product, locale);
+                if (!localizedProduct) return null;
                 return (
                 <div
                   key={product.id}
