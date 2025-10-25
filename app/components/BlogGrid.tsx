@@ -7,26 +7,31 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, Search, ArrowRight } from 'lucide-react';
 import type { BlogPost } from '../../lib/blog';
-import { useTranslations } from '@/lib/translations';
+import { useTranslations, localizeBlogPost } from '@/lib/translations';
 
 export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
-  const { t } = useTranslations();
+  const { t, locale } = useTranslations();
+  
+  // Localize all posts
+  const localizedPosts = posts.map(post => localizeBlogPost(post, locale));
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(t('blog.allCategories'));
 
-  // Filter posts
+  // Filter posts (use localized versions)
   const allCategoriesText = t('blog.allCategories');
-  const filteredPosts = posts.filter((post) => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredPosts = localizedPosts.filter((post) => {
+    const title = post.displayTitle || post.title || '';
+    const excerpt = post.displayExcerpt || post.excerpt || '';
+    const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         excerpt.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === allCategoriesText || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   // Get unique categories
-  const categories = [allCategoriesText, ...Array.from(new Set(posts.map((post) => post.category)))];
+  const categories = [allCategoriesText, ...Array.from(new Set(localizedPosts.map((post) => post.category)))];
 
   return (
     <>
@@ -132,11 +137,11 @@ export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
                         </div>
 
                         <h3 className="text-xl font-bold text-rococo-900 group-hover:text-pink-600 transition-colors line-clamp-2 mb-3">
-                          {post.title}
+                          {post.displayTitle || post.title}
                         </h3>
 
                         <p className="text-rococo-700 line-clamp-3 mb-4">
-                          {post.excerpt}
+                          {post.displayExcerpt || post.excerpt}
                         </p>
 
                         <div className="flex items-center gap-2 text-pink-600 font-medium group-hover:gap-4 transition-all">

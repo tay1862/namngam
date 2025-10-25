@@ -6,7 +6,13 @@ import { Plus, Edit, Trash2, HelpCircle } from 'lucide-react';
 interface FAQ {
   id: string;
   question: string;
+  questionTh?: string;
+  questionEn?: string;
+  questionZh?: string;
   answer: string;
+  answerTh?: string;
+  answerEn?: string;
+  answerZh?: string;
   category: string;
   order: number;
   published: boolean;
@@ -159,11 +165,18 @@ export default function FAQPage() {
 function FAQForm({ faq, onClose, onSubmit }: { faq: FAQ | null; onClose: () => void; onSubmit: (e: React.FormEvent, formData: Partial<FAQ>) => void }) {
   const [formData, setFormData] = useState({
     question: faq?.question || '',
+    questionTh: faq?.questionTh || '',
+    questionEn: faq?.questionEn || '',
+    questionZh: faq?.questionZh || '',
     answer: faq?.answer || '',
+    answerTh: faq?.answerTh || '',
+    answerEn: faq?.answerEn || '',
+    answerZh: faq?.answerZh || '',
     category: faq?.category || 'ທົ່ວໄປ',
     order: faq?.order || 0,
     published: faq?.published !== false,
   });
+  const [activeTab, setActiveTab] = useState<'lo' | 'th' | 'en' | 'zh'>('lo');
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -173,31 +186,77 @@ function FAQForm({ faq, onClose, onSubmit }: { faq: FAQ | null; onClose: () => v
         </h2>
 
         <form onSubmit={(e) => onSubmit(e, formData)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຄຳຖາມ *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.question}
-              onChange={(e) => setFormData({ ...formData, question: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
+          {/* Language Tabs */}
+          <div className="flex gap-2 bg-gray-800/70 border border-gray-700 rounded-xl p-2">
+            <button type="button" onClick={() => setActiveTab('lo')} className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'lo' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'}`}>
+              🇱🇦 ລາວ
+            </button>
+            <button type="button" onClick={() => setActiveTab('th')} className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'th' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'}`}>
+              🇹🇭 ไทย
+            </button>
+            <button type="button" onClick={() => setActiveTab('en')} className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'en' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'}`}>
+              🇬🇧 EN
+            </button>
+            <button type="button" onClick={() => setActiveTab('zh')} className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'zh' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'}`}>
+              🇨🇳 中文
+            </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຄຳຕອບ *
-            </label>
-            <textarea
-              required
-              rows={5}
-              value={formData.answer}
-              onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
-          </div>
+          {/* Lao Tab */}
+          {activeTab === 'lo' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">ຄຳຖາມ (ລາວ) *</label>
+                <input type="text" required value={formData.question} onChange={(e) => setFormData({ ...formData, question: e.target.value })} className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">ຄຳຕອບ (ລາວ) *</label>
+                <textarea required rows={5} value={formData.answer} onChange={(e) => setFormData({ ...formData, answer: e.target.value })} className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+            </>
+          )}
+
+          {/* Thai Tab */}
+          {activeTab === 'th' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">คำถาม (ไทย)</label>
+                <input type="text" value={formData.questionTh} onChange={(e) => setFormData({ ...formData, questionTh: e.target.value })} placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว" className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">คำตอบ (ไทย)</label>
+                <textarea rows={5} value={formData.answerTh} onChange={(e) => setFormData({ ...formData, answerTh: e.target.value })} placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว" className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+            </>
+          )}
+
+          {/* English Tab */}
+          {activeTab === 'en' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Question (English)</label>
+                <input type="text" value={formData.questionEn} onChange={(e) => setFormData({ ...formData, questionEn: e.target.value })} placeholder="If empty, will use Lao" className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Answer (English)</label>
+                <textarea rows={5} value={formData.answerEn} onChange={(e) => setFormData({ ...formData, answerEn: e.target.value })} placeholder="If empty, will use Lao" className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+            </>
+          )}
+
+          {/* Chinese Tab */}
+          {activeTab === 'zh' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">问题 (中文)</label>
+                <input type="text" value={formData.questionZh} onChange={(e) => setFormData({ ...formData, questionZh: e.target.value })} placeholder="如果为空，将使用老挝语" className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">答案 (中文)</label>
+                <textarea rows={5} value={formData.answerZh} onChange={(e) => setFormData({ ...formData, answerZh: e.target.value })} placeholder="如果为空，将使用老挝语" className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none" />
+              </div>
+            </>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>

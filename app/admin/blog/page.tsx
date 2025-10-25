@@ -8,9 +8,18 @@ import Image from 'next/image';
 interface BlogPost {
   id: string;
   title: string;
+  titleTh?: string;
+  titleEn?: string;
+  titleZh?: string;
   slug: string;
   excerpt: string;
+  excerptTh?: string;
+  excerptEn?: string;
+  excerptZh?: string;
   content: string;
+  contentTh?: string;
+  contentEn?: string;
+  contentZh?: string;
   image: string;
   category: string;
   published: boolean;
@@ -231,8 +240,17 @@ function BlogForm({
 }) {
   const [formData, setFormData] = useState({
     title: post?.title || '',
+    titleTh: post?.titleTh || '',
+    titleEn: post?.titleEn || '',
+    titleZh: post?.titleZh || '',
     excerpt: post?.excerpt || '',
+    excerptTh: post?.excerptTh || '',
+    excerptEn: post?.excerptEn || '',
+    excerptZh: post?.excerptZh || '',
     content: post?.content || '',
+    contentTh: post?.contentTh || '',
+    contentEn: post?.contentEn || '',
+    contentZh: post?.contentZh || '',
     image: post?.image || '',
     category: post?.category || 'ທົ່ວໄປ',
     published: post?.published || false,
@@ -240,6 +258,7 @@ function BlogForm({
   });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'lo' | 'th' | 'en' | 'zh'>('lo');
 
   // Generate slug from title
   const generateSlug = (title: string): string => {
@@ -334,45 +353,222 @@ function BlogForm({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ຫົວຂໍ້ *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
+          {/* Language Tabs */}
+          <div className="flex gap-2 bg-gray-800/70 border border-gray-700 rounded-xl p-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab('lo')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'lo' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇱🇦 ລາວ
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('th')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'th' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇹🇭 ไทย
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('en')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'en' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇬🇧 EN
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('zh')}
+              className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                activeTab === 'zh' ? 'bg-amber-600 text-black' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              🇨🇳 中文
+            </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ສະຫຼຸບສັ້ນ *
-            </label>
-            <textarea
-              required
-              rows={3}
-              value={formData.excerpt}
-              onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
-            />
-          </div>
+          {/* Lao Tab */}
+          {activeTab === 'lo' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ຫົວຂໍ້ (ລາວ) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ເນື້ອຫາ *
-            </label>
-            <textarea
-              required
-              rows={15}
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              placeholder="ເນື້ອຫາບົດຄວາມ (Markdown supported)"
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none font-mono text-sm"
-            />
-          </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ສະຫຼຸບສັ້ນ (ລາວ) *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={formData.excerpt}
+                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  ເນື້ອຫາ (ລາວ) *
+                </label>
+                <textarea
+                  required
+                  rows={15}
+                  value={formData.content}
+                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  placeholder="ເນື້ອຫາບົດຄວາມ"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none font-mono text-sm"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Thai Tab */}
+          {activeTab === 'th' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  หัวข้อ (ไทย)
+                </label>
+                <input
+                  type="text"
+                  value={formData.titleTh}
+                  onChange={(e) => setFormData({ ...formData, titleTh: e.target.value })}
+                  placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  สรุปสั้น (ไทย)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.excerptTh}
+                  onChange={(e) => setFormData({ ...formData, excerptTh: e.target.value })}
+                  placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  เนื้อหา (ไทย)
+                </label>
+                <textarea
+                  rows={15}
+                  value={formData.contentTh}
+                  onChange={(e) => setFormData({ ...formData, contentTh: e.target.value })}
+                  placeholder="ถ้าไม่ใส่ จะใช้ภาษาลาว"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none font-mono text-sm"
+                />
+              </div>
+            </>
+          )}
+
+          {/* English Tab */}
+          {activeTab === 'en' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Title (English)
+                </label>
+                <input
+                  type="text"
+                  value={formData.titleEn}
+                  onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                  placeholder="If empty, will use Lao"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Excerpt (English)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.excerptEn}
+                  onChange={(e) => setFormData({ ...formData, excerptEn: e.target.value })}
+                  placeholder="If empty, will use Lao"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Content (English)
+                </label>
+                <textarea
+                  rows={15}
+                  value={formData.contentEn}
+                  onChange={(e) => setFormData({ ...formData, contentEn: e.target.value })}
+                  placeholder="If empty, will use Lao"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none font-mono text-sm"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Chinese Tab */}
+          {activeTab === 'zh' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  标题 (中文)
+                </label>
+                <input
+                  type="text"
+                  value={formData.titleZh}
+                  onChange={(e) => setFormData({ ...formData, titleZh: e.target.value })}
+                  placeholder="如果为空，将使用老挝语"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  摘要 (中文)
+                </label>
+                <textarea
+                  rows={3}
+                  value={formData.excerptZh}
+                  onChange={(e) => setFormData({ ...formData, excerptZh: e.target.value })}
+                  placeholder="如果为空，将使用老挝语"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  内容 (中文)
+                </label>
+                <textarea
+                  rows={15}
+                  value={formData.contentZh}
+                  onChange={(e) => setFormData({ ...formData, contentZh: e.target.value })}
+                  placeholder="如果为空，将使用老挝语"
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white focus:border-amber-500 focus:outline-none font-mono text-sm"
+                />
+              </div>
+            </>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
