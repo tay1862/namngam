@@ -8,7 +8,7 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import { useLocale } from '../contexts/LocaleContext';
-import { useTranslations, localizeProduct } from '@/lib/translations';
+import { useTranslations } from '@/lib/translations';
 
 interface Product {
   id: string;
@@ -22,7 +22,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
-  const { t, locale } = useTranslations();
+  const { t } = useTranslations();
   const ref = useRef(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -157,8 +157,7 @@ export default function ProductsPage() {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayProducts.map((product) => {
-                const localizedProduct = localizeProduct(product, locale);
-                if (!localizedProduct) return null;
+                // Use product directly since they should be localized by the API
                 return (
                 <div
                   key={product.id}
@@ -169,7 +168,7 @@ export default function ProductsPage() {
                     {product.image ? (
                       <Image
                         src={product.image}
-                        alt={localizedProduct.displayName}
+                        alt={product.name}
                         fill
                         unoptimized={product.image.startsWith('/uploads')}
                         className="object-cover group-hover:scale-110 transition-transform duration-500"
@@ -191,18 +190,18 @@ export default function ProductsPage() {
                   <div className="p-4 bg-white">
                     <div className="mb-3">
                       <h3 className="text-xl font-bold text-gray-900 mb-1">
-                        {localizedProduct.displayName}
+                        {product.name}
                       </h3>
                     </div>
 
                     <p className="text-gray-700 mb-3 text-sm line-clamp-2">
-                      {localizedProduct.displayDescription}
+                      {product.description}
                     </p>
 
                     {/* Features */}
-                    {localizedProduct.displayFeatures && localizedProduct.displayFeatures.length > 0 && (
+                    {product.features && product.features.length > 0 && (
                       <div className="space-y-1 mb-3">
-                        {localizedProduct.displayFeatures.slice(0, 3).map((feature: string, i: number) => (
+                        {product.features.slice(0, 3).map((feature: string, i: number) => (
                           <div key={i} className="flex items-start gap-1">
                             <Check className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                             <span className="text-xs text-gray-600">{feature}</span>
@@ -212,9 +211,9 @@ export default function ProductsPage() {
                     )}
 
                     {/* Benefits Tags */}
-                    {localizedProduct.displayBenefits && localizedProduct.displayBenefits.length > 0 && (
+                    {product.benefits && product.benefits.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-3">
-                        {localizedProduct.displayBenefits.slice(0, 3).map((benefit: string, i: number) => (
+                        {product.benefits.slice(0, 3).map((benefit: string, i: number) => (
                           <span
                             key={i}
                             className="px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full text-xs font-medium"
@@ -234,7 +233,7 @@ export default function ProductsPage() {
                         </p>
                       </div>
                       <a
-                        href={`https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈ ${localizedProduct.displayName}`}
+                        href={`https://wa.me/8562055485622?text=ສະບາຍດີ! ຂ້ອຍສົນໃຈ ${product.name}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full block text-center px-4 py-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm rounded-lg font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"

@@ -5,7 +5,7 @@ import { useInView } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { Heart, Sparkles, Leaf } from 'lucide-react';
 import Image from 'next/image';
-import { useTranslations, localizeAboutSection } from '@/lib/translations';
+import { useTranslations } from '@/lib/translations';
 import { useFetch } from '@/lib/hooks/useFetch';
 
 interface AboutSection {
@@ -26,12 +26,30 @@ interface AboutSection {
 }
 
 export default function About() {
-  const { t, locale } = useTranslations();
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: sections, loading } = useFetch<AboutSection[]>('/api/admin/about');
   const rawSection = sections?.[0];
-  const section = rawSection ? localizeAboutSection(rawSection, locale) : null;
+  
+  // Localize section data
+  const getLocalizedField = (obj: AboutSection, field: string, locale: string) => {
+    const localeField = `${field}${locale.charAt(0).toUpperCase() + locale.slice(1)}`;
+    if (obj[localeField as keyof AboutSection]) {
+      return obj[localeField as keyof AboutSection];
+    }
+    const enField = `${field}En`;
+    if (obj[enField as keyof AboutSection]) {
+      return obj[enField as keyof AboutSection];
+    }
+    return obj[field as keyof AboutSection];
+  };
+  
+  const section = rawSection ? {
+    ...rawSection,
+    displayTitle: getLocalizedField(rawSection, 'title', 'lo'), // Default to Lao
+    displayDescription: getLocalizedField(rawSection, 'description', 'lo'),
+  } : null;
 
   const features = [
     {

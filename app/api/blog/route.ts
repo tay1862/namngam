@@ -1,10 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getCachedBlogPosts } from '@/lib/cache';
+import { checkRateLimit, apiLimiter } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic'; // Disable caching for this route temporarily
 export const revalidate = 0; // Revalidate on every request
 
-export async function GET() {
+export async function GET(request: Request) {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const rateLimitResult = await checkRateLimit(apiLimiter, ip);
+  
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: rateLimitResult.error },
+      { status: 429 }
+    );
+  }
+  
   try {
     console.log('[Blog API] Fetching blog posts...');
     const posts = await getCachedBlogPosts();

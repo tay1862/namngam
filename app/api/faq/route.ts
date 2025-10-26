@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getCachedFAQs } from '@/lib/cache';
+import { checkRateLimit, apiLimiter } from '@/lib/rate-limit';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown';
+  const rateLimitResult = await checkRateLimit(apiLimiter, ip);
+  
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: rateLimitResult.error },
+      { status: 429 }
+    );
+  }
+  
   try {
     const faqs = await getCachedFAQs();
     return NextResponse.json(faqs);

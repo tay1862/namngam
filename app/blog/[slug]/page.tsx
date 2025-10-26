@@ -10,13 +10,19 @@ import WhatsAppButton from '../../components/WhatsAppButton';
 import ShareButtons from '../../components/ShareButtons';
 import ReactMarkdown from 'react-markdown';
 import { useEffect, useState } from 'react';
-import { useTranslations, localizeBlogPost } from '@/lib/translations';
 
 export default function BlogPostPage() {
   const params = useParams();
   const slug = params?.slug as string;
-  const { locale } = useTranslations();
-  const [post, setPost] = useState<any>(null);
+  const [post, setPost] = useState<{
+    image: string;
+    title: string;
+    category: string;
+    date: string;
+    readTime: string;
+    slug: string;
+    content: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,7 +62,7 @@ export default function BlogPostPage() {
     notFound();
   }
 
-  const localizedPost = localizeBlogPost(post, locale);
+  // Use post directly since it should be localized by the API
 
   return (
     <>
@@ -67,7 +73,7 @@ export default function BlogPostPage() {
         <div className="relative h-[60vh] min-h-[400px] overflow-hidden">
           <Image
             src={post.image}
-            alt={localizedPost?.displayTitle || post.title}
+            alt={post.title}
             fill
             className="object-cover"
             priority
@@ -90,7 +96,7 @@ export default function BlogPostPage() {
               </span>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                {localizedPost?.displayTitle || post.title}
+                {post.title}
               </h1>
 
               <div className="flex items-center gap-6 text-white/80 text-sm">
@@ -113,7 +119,7 @@ export default function BlogPostPage() {
           <div className="flex justify-end mb-8">
             <ShareButtons
               url={`https://guasha-blog.vercel.app/blog/${post.slug}`}
-              title={localizedPost?.displayTitle || post.title}
+              title={post.title}
             />
           </div>
 
@@ -167,7 +173,7 @@ export default function BlogPostPage() {
                 ),
               }}
             >
-              {localizedPost?.displayContent || post.content}
+              {post.content}
             </ReactMarkdown>
           </div>
 
@@ -176,7 +182,7 @@ export default function BlogPostPage() {
             <p className="text-lg font-semibold text-rococo-900 mb-4">ແບ່ງປັນບົດຄວາມນີ້:</p>
             <ShareButtons
               url={`https://guasha-blog.vercel.app/blog/${post.slug}`}
-              title={localizedPost?.displayTitle || post.title}
+              title={post.title}
             />
           </div>
         </div>

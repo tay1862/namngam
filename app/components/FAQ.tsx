@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
-import { useTranslations, localizeFAQ } from '@/lib/translations';
+import { useTranslations } from '@/lib/translations';
 import { useFetch } from '@/lib/hooks/useFetch';
 
 interface FAQ {
@@ -20,7 +20,7 @@ interface FAQ {
 }
 
 export default function FAQ() {
-  const { t, locale } = useTranslations();
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -55,9 +55,6 @@ export default function FAQ() {
   ];
 
   const displayFaqs = faqs && faqs.length > 0 ? faqs : defaultFaqs;
-  
-  // Localize FAQs
-  const localizedFaqs = displayFaqs.map(faq => localizeFAQ(faq, locale));
   
   if (loading) {
     return (
@@ -94,7 +91,7 @@ export default function FAQ() {
         </motion.div>
 
         <div className="space-y-4">
-          {localizedFaqs.map((faq, index) => (
+          {displayFaqs.map((faq, index) => (
             <motion.div
               key={faq.id}
               initial={{ opacity: 0, y: 20 }}
@@ -107,7 +104,7 @@ export default function FAQ() {
               >
                 <div className="flex justify-between items-center">
                   <h3 className="text-xl font-bold text-rococo-900 pr-8">
-                    {faq.displayQuestion || faq.question}
+                    {faq.question}
                   </h3>
                   <motion.div
                     animate={{ rotate: openIndex === index ? 180 : 0 }}
@@ -132,7 +129,7 @@ export default function FAQ() {
                       className="overflow-hidden"
                     >
                       <p className="text-rococo-700 mt-4 leading-relaxed whitespace-pre-line">
-                        {faq.displayAnswer || faq.answer}
+                        {faq.answer}
                       </p>
                     </motion.div>
                   )}

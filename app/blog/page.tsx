@@ -32,7 +32,15 @@ export default async function BlogPage() {
       <Navigation />
       
       <main className="min-h-screen pt-20">
-        <BlogGrid posts={posts} />
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-pink-600 to-rococo-600 bg-clip-text text-transparent">
+            Blog
+          </h1>
+          <p className="text-center text-gray-600 mb-12">
+            Latest news and updates about guasha therapy
+          </p>
+          <BlogGrid posts={posts} />
+        </div>
       </main>
 
       <Footer />

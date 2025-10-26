@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
-import { useTranslations, localizeBenefitItem } from '@/lib/translations';
+import { useTranslations } from '@/lib/translations';
 import { useFetch } from '@/lib/hooks/useFetch';
 
 interface BenefitItem {
@@ -23,7 +23,7 @@ interface BenefitItem {
 }
 
 export default function Benefits() {
-  const { t, locale } = useTranslations();
+  const { t } = useTranslations();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: benefits, loading } = useFetch<BenefitItem[]>('/api/admin/benefits');
@@ -38,11 +38,8 @@ export default function Benefits() {
     { id: '6', title: "ຫຼຸດສິວ", titleTh: undefined, titleEn: undefined, titleZh: undefined, description: "ຊ່ວຍຫຼຸດການເກີດສິວແລະສິ່ງເສດ", descriptionTh: undefined, descriptionEn: undefined, descriptionZh: undefined, icon: "🌸", image: undefined, order: 6 },
   ];
 
-  // Localize benefits based on current language
-  const localizedBenefits = benefits && benefits.length > 0 
-    ? benefits.map(b => localizeBenefitItem(b, locale)) 
-    : defaultBenefits;
-  const displayBenefits = localizedBenefits;
+  // Use benefits directly since they should be localized by the API
+  const displayBenefits = benefits && benefits.length > 0 ? benefits : defaultBenefits;
   
   if (loading) {
     return (
@@ -116,11 +113,11 @@ export default function Benefits() {
                   )}
                   
                   <h3 className="text-xl font-bold text-rococo-900 mb-2">
-                    {benefit.displayTitle || benefit.title}
+                    {benefit.title}
                   </h3>
                   
                   <p className="text-rococo-700 whitespace-pre-line">
-                    {benefit.displayDescription || benefit.description}
+                    {benefit.description}
                   </p>
                 </div>
               </div>

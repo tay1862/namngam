@@ -7,13 +7,32 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock, Search, ArrowRight } from 'lucide-react';
 import type { BlogPost } from '../../lib/blog';
-import { useTranslations, localizeBlogPost } from '@/lib/translations';
+import { useTranslations } from '@/lib/translations';
 
 export default function BlogGrid({ posts }: { posts: BlogPost[] }) {
-  const { t, locale } = useTranslations();
+  const { t } = useTranslations();
   
   // Localize all posts
-  const localizedPosts = posts.map(post => localizeBlogPost(post, locale));
+  const localizedPosts = posts.map(post => {
+    // Localize post data
+    const getLocalizedField = (obj: BlogPost, field: string, locale: string) => {
+      const localeField = `${field}${locale.charAt(0).toUpperCase() + locale.slice(1)}`;
+      if (obj[localeField as keyof BlogPost]) {
+        return obj[localeField as keyof BlogPost];
+      }
+      const enField = `${field}En`;
+      if (obj[enField as keyof BlogPost]) {
+        return obj[enField as keyof BlogPost];
+      }
+      return obj[field as keyof BlogPost];
+    };
+    
+    return {
+      ...post,
+      displayTitle: getLocalizedField(post, 'title', 'lo'), // Default to Lao
+      displayExcerpt: getLocalizedField(post, 'excerpt', 'lo'),
+    };
+  });
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
   const [searchTerm, setSearchTerm] = useState('');
